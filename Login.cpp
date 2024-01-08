@@ -7,7 +7,9 @@ bool    isNum(std::string str)
         if(str[i] > '9' || str[i] < '0')
             return false;
     }
+    return true;
 }
+Login::~Login(){}
 
 Login::Login(std::string pas): _pass(pas){}
 
@@ -15,7 +17,7 @@ bool    Login::verifyPort(std::string port)
 {
     int num;
 
-    if (isNum(port))
+    if (!isNum(port))
     {
         std::cout << "Error: Port should be numeric." << std::endl;
         return false;

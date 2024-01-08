@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <poll.h>
+
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -19,9 +21,10 @@ class Server{
     private:
         std::string password;
         int port;
-        struct pollfd serverfd_;
-        std::vector<pollfd>(1) pollfd_; 
 
+
+        struct pollfd serverfd_;
+        std::vector<pollfd> _pollsfd;
     
 };
 #endif

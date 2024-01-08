@@ -1,4 +1,5 @@
 #include "Login.hpp"
+#include "server.hpp"
 #include <iostream>
 
 int main(int argc, char **argv)
@@ -9,6 +10,9 @@ int main(int argc, char **argv)
         return 0;
     }
     Login start(argv[2]);
-    start.verifyPort(argv[1]);
+    if(!start.verifyPort(argv[1])){
+        return 0;
+    }
+    Server(std::stoi(argv[1]), argv[2]);
     return 0;
 }

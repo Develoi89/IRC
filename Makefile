@@ -1,8 +1,11 @@
 NAME		=	ircserv
 
-SRC			=	main.cpp
+SRC			=	main.cpp\
+				server.cpp\
+				Login.cpp
 
-HDS			=	
+HDS			=	Login.hpp\
+				server.hpp
 
 OBJ			=	$(SRC:.cpp=.o)
 
