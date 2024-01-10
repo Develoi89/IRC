@@ -18,6 +18,7 @@
 class Server{
     public:
         Server(int port, std::string password);
+        void loop();
     private:
         std::string password;
         int port;

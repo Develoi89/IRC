@@ -13,6 +13,7 @@ int main(int argc, char **argv)
     if(!start.verifyPort(argv[1])){
         return 0;
     }
-    Server(std::stoi(argv[1]), argv[2]);
+    Server server(std::stoi(argv[1]), argv[2]);
+    server.loop();
     return 0;
 }
