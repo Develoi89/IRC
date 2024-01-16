@@ -7,6 +7,8 @@
 #include <ctime>
 #include <vector>
 #include <poll.h>
+#include <csignal>
+
 
 
 #include <sys/types.h>
