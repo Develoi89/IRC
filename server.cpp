@@ -36,6 +36,11 @@ Server::Server(int port, std::string password){
     this->_pollsfd[0].events = POLLIN;
 }
 
+// bool singIn()
+// {
+
+// }
+
 void Server::loop(){
     int cls = 1;
     while(true){
@@ -50,10 +55,19 @@ void Server::loop(){
                     if (this->_pollsfd[i].fd == this->serverfd_.fd)
                     {
                         int nuevoSocket = accept(this->serverfd_.fd, nullptr, nullptr);
-                        this->_pollsfd[cls].fd = nuevoSocket;
-                        this->_pollsfd[cls].events = POLLIN;
-                        std::cout << "CLIENTE NUEVO " << std::endl;
-                        cls++;
+                        send(nuevoSocket, "Ingrese la contraseña: ", strlen("Ingrese la contraseña: "), 0);
+                        char receivedPassword[password.size()];
+                        recv(nuevoSocket, receivedPassword, sizeof(receivedPassword), 0);
+                        if(strcmp(receivedPassword, this->password.c_str()) == 0)
+                        {
+
+                            this->_pollsfd[cls].fd = nuevoSocket;
+                            this->_pollsfd[cls].events = POLLIN;
+                            std::cout << "CLIENTE NUEVO " << std::endl;
+                            cls++;
+                        }
+                        else
+                        {}
                     }
                     
                 }
