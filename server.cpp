@@ -1,5 +1,5 @@
 #include "server.hpp"
-
+bool stop = false;
 Server::Server(int port, std::string password){
     this->port = port;
     this->password = password;
@@ -36,12 +36,9 @@ Server::Server(int port, std::string password){
     this->_pollsfd[0].events = POLLIN;
 }
 
-// bool singIn()
-// {
+void handler(int signal) {(void) signal; stop = true;}
 
-// }
-
-void runCmd(std::string buffer)
+void Server::runCmd(std::string buffer)
 {
     std::vector<std::string> tokens;
     std::string word;
@@ -54,7 +51,7 @@ void runCmd(std::string buffer)
             tokens.push_back(word); 
         }
     }
-}
+    }
 
 void Server::_request(int i)
 {
@@ -72,7 +69,11 @@ void Server::_request(int i)
 
 void Server::loop(){
     int cls = 1;
-    while(true){
+    char buffer[1024] = {0};
+    
+    std::signal(SIGINT, handler);
+
+    while(!stop){
         if(poll(this->_pollsfd.data(), cls , -1) == -1){
             std::cout << std::strerror(errno) << std::endl;
             close( this->serverfd_.fd);
@@ -83,10 +84,10 @@ void Server::loop(){
                 if (this->_pollsfd[i].revents & POLLIN) {
                     if (this->_pollsfd[i].fd == this->serverfd_.fd)
                     {
-                        int nuevoSocket = accept(this->serverfd_.fd, nullptr, nullptr);
-                        this->_pollsfd[cls].fd = nuevoSocket;
+                        int new_fd = accept(this->serverfd_.fd, nullptr, nullptr);
+                        this->_pollsfd[cls].fd = new_fd;
                         this->_pollsfd[cls].events = POLLIN;
-                        std::cout << "CLIENTE NUEVO " << std::endl;
+                        this->map_clients.insert(std::pair<int, Client *>(new_fd, new Client(new_fd)));
                         cls++;
                     }
                     else
