@@ -41,10 +41,6 @@ void handler(int signal) {(void) signal; stop = true;}
 void Server::loop(){
     int cls = 1;
     char buffer[1024] = {0};
-    char nickname[1024] = {0};
-
-
-    char nick[1024] = "NICKNAME: ";
     
     std::signal(SIGINT, handler);
 
@@ -62,8 +58,10 @@ void Server::loop(){
                         int new_fd = accept(this->serverfd_.fd, nullptr, nullptr);
                         this->_pollsfd[cls].fd = new_fd;
                         this->_pollsfd[cls].events = POLLIN;
+                        this->map_clients.insert(std::pair<int, Client *>(new_fd, new Client(new_fd)));
                         cls++;
                     }
+                    
                 }
             }
            

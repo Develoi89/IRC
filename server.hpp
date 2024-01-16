@@ -8,6 +8,8 @@
 #include <vector>
 #include <poll.h>
 #include <csignal>
+#include <map>
+#include "Client.hpp"
 
 
 
@@ -16,6 +18,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+class Client;
 
 class Server{
     public:
@@ -24,7 +27,7 @@ class Server{
     private:
         std::string password;
         int port;
-
+        std::map<int, Client *>map_clients;
 
         struct pollfd serverfd_;
         std::vector<pollfd> _pollsfd;
