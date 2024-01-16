@@ -38,8 +38,6 @@ Server::Server(int port, std::string password){
 
 void handler(int signal) {(void) signal; stop = true;}
 
-
-
 void Server::loop(){
     int cls = 1;
     char buffer[1024] = {0};
