@@ -7,6 +7,8 @@
 #include <ctime>
 #include <vector>
 #include <poll.h>
+#include <string>
+#include <sstream>
 
 
 #include <sys/types.h>
@@ -18,7 +20,9 @@
 class Server{
     public:
         Server(int port, std::string password);
+        void _request(int i);
         void loop();
+        void runCmd(std::string buffer);
     private:
         std::string password;
         int port;

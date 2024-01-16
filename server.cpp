@@ -41,6 +41,35 @@ Server::Server(int port, std::string password){
 
 // }
 
+void runCmd(std::string buffer)
+{
+    std::vector<std::string> tokens;
+    std::string word;
+    std::stringstream str(buffer);
+    while (std::getline(str, word, ' '))
+    {
+        if(word[0] != '\n')
+        {
+            std::cout << word;
+            tokens.push_back(word); 
+        }
+    }
+}
+
+void Server::_request(int i)
+{
+    char buffer[1024];
+    ssize_t bytes = recv(this->_pollsfd[i].fd, buffer, sizeof(buffer), 0);
+    // if(bytes == -1)
+    // {
+    // }
+    // if(bytes == 0)
+    // {
+    // }
+    std::string request(buffer, bytes);
+    runCmd(request);
+}
+
 void Server::loop(){
     int cls = 1;
     while(true){
@@ -60,7 +89,10 @@ void Server::loop(){
                         std::cout << "CLIENTE NUEVO " << std::endl;
                         cls++;
                     }
-                    
+                    else
+                    {
+                        _request(i);
+                    }
                 }
             }
            
