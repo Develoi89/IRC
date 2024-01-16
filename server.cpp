@@ -38,20 +38,38 @@ Server::Server(int port, std::string password){
 
 void handler(int signal) {(void) signal; stop = true;}
 
-void Server::runCmd(std::string buffer)
+void Server::runCmd(std::string buffer, int i)
 {
     std::vector<std::string> tokens;
     std::string word;
     std::stringstream str(buffer);
     while (std::getline(str, word, ' '))
     {
-        if(word[0] != '\n')
-        {
-            std::cout << word;
-            tokens.push_back(word); 
+        size_t pos;
+        while ((pos = word.find('\n')) != std::string::npos) {
+            word.erase(pos, 1);
+        }
+        if (!word.empty()) {
+            std::cout << word << std::endl;
+            tokens.push_back(word);
         }
     }
+    Client *aux(map_clients[this->_pollsfd[i].fd]);
+    if(aux->getPw() == false)
+    {
+        if(tokens[0] == "PASS")
+            if(tokens[1] == this->password)
+            {
+                send(this->_pollsfd[i].fd, "Conected.\n", 10, 0);
+                aux->setPw(true);
+            }
     }
+    else
+    {
+        //el resto de comandos.
+    }
+
+}
 
 void Server::_request(int i)
 {
@@ -64,7 +82,7 @@ void Server::_request(int i)
     // {
     // }
     std::string request(buffer, bytes);
-    runCmd(request);
+    runCmd(request, i);
 }
 
 void Server::loop(){

@@ -27,7 +27,7 @@ class Server{
         Server(int port, std::string password);
         void _request(int i);
         void loop();
-        void runCmd(std::string buffer);
+        void runCmd(std::string buffer, int i);
     private:
         std::string password;
         int port;
