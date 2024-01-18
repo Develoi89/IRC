@@ -27,6 +27,7 @@ class Client{
         const std::string &getName() const {return this->name;}
         const std::string &getUser() const {return this->user;}
         const std::string &getBuffer() const {return this->buff;}
+        const int &getFd() const {return this->fd;}
         const bool &getPw() const {return this->pw;}
         const bool &getRg() const {return this->rg;}
         void newMessage(std::string str);

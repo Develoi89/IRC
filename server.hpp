@@ -31,6 +31,7 @@ class Server{
     private:
         std::string password;
         int port;
+        int cls;
         std::map<int, Client *>map_clients;
 
         struct pollfd serverfd_;
