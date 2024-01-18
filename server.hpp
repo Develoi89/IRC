@@ -28,6 +28,7 @@ class Server{
         void _request(int i);
         void loop();
         void runCmd(std::string buffer, int i);
+        void _rmClient(const Client &c);
     private:
         std::string password;
         int port;
