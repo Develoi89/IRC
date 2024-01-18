@@ -20,20 +20,10 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
 class Client;
 
 class Server{
-    private:
-        std::string _password;
-        std::map<int, Client *> _map_clients;
-        std::vector<pollfd> _pollsfd;
-
-        struct pollfd _serverfd_;
-        int _port;
-
     public:
-        bool verifyPort(std::string port); 
         Server(int port, std::string password);
         void _request(int i);
         void loop();

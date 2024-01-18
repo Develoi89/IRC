@@ -74,14 +74,13 @@ void Server::runCmd(std::string buffer, int i)
         
         if(tokens[0] == "USER"){
             //implementar errores
-                if(aux->getNick() == "")
-                    return ;
-        
-                aux->setUser(tokens[1]);
-                aux->setName(tokens[4]);
-                aux->setRg(true);
-                aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName())
-            }
+            if(aux->getNick() == "")
+                return ;
+    
+            aux->setUser(tokens[1]);
+            aux->setName(tokens[4]);
+            aux->setRg(true);
+            aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
 
         }
         }
@@ -89,7 +88,8 @@ void Server::runCmd(std::string buffer, int i)
             //Todos los comandos:
             //checkCmd(aux, tokens);
         }
-    
+        
+    }
 
 }
 
