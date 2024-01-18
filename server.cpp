@@ -66,7 +66,7 @@ void Server::runCmd(std::string buffer, int i)
     }
     else
     {
-        //el resto de comandos.
+       
     }
 
 }
