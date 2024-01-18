@@ -71,7 +71,7 @@ void Server::runCmd(std::string buffer, int i)
         if(tokens[0] == "NICK")
             //implementar errores y CAMBIO DE NICK -- teo NICK oet
             aux->setNick(tokens[1]);
-        }
+        
         if(tokens[0] == "USER"){
             //implementar errores
             if(aux->getNick() == "")
@@ -83,6 +83,12 @@ void Server::runCmd(std::string buffer, int i)
             aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
 
         }
+        }
+        else{
+            //Todos los comandos:
+            checkCmd(aux, tokens);
+        }
+        
     }
 
 }
