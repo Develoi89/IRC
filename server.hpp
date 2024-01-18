@@ -37,6 +37,15 @@ class Server{
         Server(int port, std::string password);
         void _request(int i);
         void loop();
-        void runCmd(std::string buffer, int i);  
+        void runCmd(std::string buffer, int i);
+    private:
+        std::string password;
+        int port;
+        int cls;
+        std::map<int, Client *>map_clients;
+
+        struct pollfd serverfd_;
+        std::vector<pollfd> _pollsfd;
+    
 };
 #endif

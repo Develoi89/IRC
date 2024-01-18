@@ -50,7 +50,7 @@ void Server::runCmd(std::string buffer, int i)
             word.erase(pos, 1);
         }
         if (!word.empty()) {
-            //std::cout << word << std::endl;
+            std::cout << word << std::endl;
             tokens.push_back(word);
         }
     }
@@ -71,8 +71,8 @@ void Server::runCmd(std::string buffer, int i)
         if(tokens[0] == "NICK")
             //implementar errores y CAMBIO DE NICK -- teo NICK oet
             aux->setNick(tokens[1]);
-
-            if(tokens[0] == "USER"){
+        
+        if(tokens[0] == "USER"){
             //implementar errores
                 if(aux->getNick() == "")
                     return ;
@@ -84,47 +84,78 @@ void Server::runCmd(std::string buffer, int i)
             }
 
         }
+        }
+        else{
+            //Todos los comandos:
+            //checkCmd(aux, tokens);
+        }
         
     }
 
 }
 
+void _rmClient(const Client &c){
+    for (size_t i = 0; i < this->_pollsfd.size(); ++i)
+    {
+        if (c.getFd() == this->_pollsfd[i].fd)
+        {
+            _pollsfd.erase(_pollsfd.begin() + i);
+            this->cls--;
+            break;
+        }
+    }
+    int fd = c.getFd();
+    close(fd);
+    delete _clients[fd];
+    _clients.erase(fd);
+}
+
+
+
 void Server::_request(int i)
 {
     char buffer[1024];
     ssize_t bytes = recv(this->_pollsfd[i].fd, buffer, sizeof(buffer), 0);
-    // if(bytes == -1)
-    // {
-    // }
-    // if(bytes == 0)
-    // {
-    // }
+    
+    if(bytes == -1)
+    {
+        std::cerr << "recv() error: " << std::strerror(errno) << std::endl;
+        return;
+    }
+    if(bytes == 0)
+    {
+        _rmClient(*_clients[this->_pollsfd[i].fd]);
+        return;
+    }
     std::string request(buffer, bytes);
     runCmd(request, i);
 }
 
 void Server::loop(){
-    int cls = 1;
+    this->cls = 1;
     char buffer[1024] = {0};
     
     std::signal(SIGINT, handler);
 
     while(!stop){
-        if(poll(this->_pollsfd.data(), cls , -1) == -1){
+        if(poll(this->_pollsfd.data(), this->cls , -1) == -1){
             std::cout << std::strerror(errno) << std::endl;
             close( this->serverfd_.fd);
             exit(1);
         }
         
-            for(int i = 0; i < cls; i++){
+            for(int i = 0; i < this->cls; i++){
                 if (this->_pollsfd[i].revents & POLLIN) {
                     if (this->_pollsfd[i].fd == this->serverfd_.fd)
                     {
                         int new_fd = accept(this->serverfd_.fd, nullptr, nullptr);
-                        this->_pollsfd[cls].fd = new_fd;
-                        this->_pollsfd[cls].events = POLLIN;
+                        if(new_fd == -1){
+                            std::cout << std::strerror(errno) << std::endl; 
+                        }
+                        this->_pollsfd[this->cls].fd = new_fd;
+                        this->_pollsfd[this->cls].events = POLLIN;
                         this->map_clients.insert(std::pair<int, Client *>(new_fd, new Client(new_fd)));
-                        cls++;
+                        this->cls++;
                     }
                     else
                     {
