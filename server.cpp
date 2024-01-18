@@ -1,39 +1,8 @@
 #include "server.hpp"
 bool stop = false;
-
-bool    isNum(std::string str)
-{
-    for (size_t i = 0; i < str.size(); i++)
-    {
-        if(str[i] > '9' || str[i] < '0')
-            return false;
-    }
-    return true;
-}
-
-bool    Server::verifyPort(std::string port)
-{
-    int num;
-
-    if (!isNum(port))
-    {
-        std::cout << "Error: Port should be numeric." << std::endl;
-        return false;
-    }
-
-    num = std::stoi(port);
-    if(num > 65535 || num < 1)
-    {
-        std::cout << "Error: invalid range of Port." << std::endl;
-        return false;
-    }
-    std::cout << "port verifyed " << port << std::endl;
-    return true;
-}
-
 Server::Server(int port, std::string password){
-    _port = port;
-    _password = password;
+    this->port = port;
+    this->password = password;
     int socketServidor = socket(AF_INET, SOCK_STREAM, 0);
     if (socketServidor == -1) {
         std::cout << std::strerror(errno) << std::endl;
@@ -43,7 +12,7 @@ Server::Server(int port, std::string password){
     sockaddr_in servAddr;//esto se utiliza para almacenar la información de 
     std::memset(&servAddr, 0, sizeof(servAddr)); //inicializa toda la estructura direccionServidor con ceros.
     servAddr.sin_family = AF_INET; //AF_INET establece el tipo de dirección como IPv4
-    servAddr.sin_port = htons(_port); //Convierte el numero del puerto para ser usada en la red
+    servAddr.sin_port = htons(this->port); //Convierte el numero del puerto para ser usada en la red
     servAddr.sin_addr.s_addr = INADDR_ANY; //el servidor aceptará conexiones en cualquier interfaz de red disponible en la máquina.
 
 
@@ -60,11 +29,11 @@ Server::Server(int port, std::string password){
     }
 
 
-    _pollsfd = std::vector<pollfd>(1);
+    this->_pollsfd = std::vector<pollfd>(1);
 
-    _serverfd_.fd = socketServidor;
-    _pollsfd[0].fd = socketServidor;
-    _pollsfd[0].events = POLLIN;
+    this->serverfd_.fd = socketServidor;
+    this->_pollsfd[0].fd = socketServidor;
+    this->_pollsfd[0].events = POLLIN;
 }
 
 void handler(int signal) {(void) signal; stop = true;}
@@ -85,13 +54,13 @@ void Server::runCmd(std::string buffer, int i)
             tokens.push_back(word);
         }
     }
-    Client *aux(_map_clients[_pollsfd[i].fd]);
+    Client *aux(map_clients[this->_pollsfd[i].fd]);
     if(aux->getPw() == false)
     {
         if(tokens[0] == "PASS")
-            if(tokens[1] == _password)
+            if(tokens[1] == this->password)
             {
-                send(_pollsfd[i].fd, "Conected.\n", 10, 0);
+                send(this->_pollsfd[i].fd, "Conected.\n", 10, 0);
                 aux->setPw(true);
             }
     }
@@ -102,18 +71,20 @@ void Server::runCmd(std::string buffer, int i)
         if(tokens[0] == "NICK")
             //implementar errores y CAMBIO DE NICK -- teo NICK oet
             aux->setNick(tokens[1]);
-        }
-        if(tokens[0] == "USER"){
+
+            if(tokens[0] == "USER"){
             //implementar errores
-            if(aux->getNick() == "")
-                return ;
-    
-            aux->setUser(tokens[1]);
-            aux->setName(tokens[4]);
-            aux->setRg(true);
-            aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
+                if(aux->getNick() == "")
+                    return ;
+        
+                aux->setUser(tokens[1]);
+                aux->setName(tokens[4]);
+                aux->setRg(true);
+                aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName())
+            }
 
         }
+        
     }
 
 }
@@ -121,7 +92,7 @@ void Server::runCmd(std::string buffer, int i)
 void Server::_request(int i)
 {
     char buffer[1024];
-    ssize_t bytes = recv(_pollsfd[i].fd, buffer, sizeof(buffer), 0);
+    ssize_t bytes = recv(this->_pollsfd[i].fd, buffer, sizeof(buffer), 0);
     // if(bytes == -1)
     // {
     // }
@@ -139,20 +110,20 @@ void Server::loop(){
     std::signal(SIGINT, handler);
 
     while(!stop){
-        if(poll(_pollsfd.data(), cls , -1) == -1){
+        if(poll(this->_pollsfd.data(), cls , -1) == -1){
             std::cout << std::strerror(errno) << std::endl;
-            close( _serverfd_.fd);
+            close( this->serverfd_.fd);
             exit(1);
         }
         
             for(int i = 0; i < cls; i++){
-                if (_pollsfd[i].revents & POLLIN) {
-                    if (_pollsfd[i].fd == _serverfd_.fd)
+                if (this->_pollsfd[i].revents & POLLIN) {
+                    if (this->_pollsfd[i].fd == this->serverfd_.fd)
                     {
-                        int new_fd = accept(_serverfd_.fd, nullptr, nullptr);
-                        _pollsfd[cls].fd = new_fd;
-                        _pollsfd[cls].events = POLLIN;
-                        _map_clients.insert(std::pair<int, Client *>(new_fd, new Client(new_fd)));
+                        int new_fd = accept(this->serverfd_.fd, nullptr, nullptr);
+                        this->_pollsfd[cls].fd = new_fd;
+                        this->_pollsfd[cls].events = POLLIN;
+                        this->map_clients.insert(std::pair<int, Client *>(new_fd, new Client(new_fd)));
                         cls++;
                     }
                     else
