@@ -50,7 +50,7 @@ void Server::runCmd(std::string buffer, int i)
             word.erase(pos, 1);
         }
         if (!word.empty()) {
-            std::cout << word << std::endl;
+            //std::cout << word << std::endl;
             tokens.push_back(word);
         }
     }
@@ -66,7 +66,23 @@ void Server::runCmd(std::string buffer, int i)
     }
     else
     {
-       
+       if(aux->getRg() == false)
+       {
+        if(tokens[0] == "NICK")
+            //implementar errores y CAMBIO DE NICK -- teo NICK oet
+            aux->setNick(tokens[1]);
+        }
+        if(tokens[0] == "USER"){
+            //implementar errores
+            if(aux->getNick() == "")
+                return ;
+    
+            aux->setUser(tokens[1]);
+            aux->setName(tokens[4]);
+            aux->setRg(true);
+            aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
+
+        }
     }
 
 }
