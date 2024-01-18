@@ -26,16 +26,17 @@ class Client;
 class Server{
     private:
         std::string _password;
-        int _port;
         std::map<int, Client *> _map_clients;
-        struct pollfd _serverfd_;
         std::vector<pollfd> _pollsfd;
 
+        struct pollfd _serverfd_;
+        int _port;
+
     public:
+        bool verifyPort(std::string port); 
         Server(int port, std::string password);
         void _request(int i);
         void loop();
         void runCmd(std::string buffer, int i);  
-        bool verifyPort(std::string port); 
 };
 #endif
