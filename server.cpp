@@ -93,20 +93,20 @@ void Server::runCmd(std::string buffer, int i)
 
 }
 
-void _rmClient(const Client &c){
+void Server::_rmClient(const Client &c){
     for (size_t i = 0; i < this->_pollsfd.size(); ++i)
     {
         if (c.getFd() == this->_pollsfd[i].fd)
         {
-            _pollsfd.erase(_pollsfd.begin() + i);
+            this->_pollsfd.erase(this->_pollsfd.begin() + i);
             this->cls--;
             break;
         }
     }
     int fd = c.getFd();
     close(fd);
-    delete this->_map_clients[fd];
-    this->_map_clients.erase(fd);
+    delete this->map_clients[fd];
+    this->map_clients.erase(fd);
 }
 
 
@@ -123,7 +123,8 @@ void Server::_request(int i)
     }
     if(bytes == 0)
     {
-        _rmClient(*_clients[this->_pollsfd[i].fd]);
+        std::cout << "JOA" << std::endl;
+        _rmClient(*this->map_clients[this->_pollsfd[i].fd]);
         return;
     }
     std::string request(buffer, bytes);
