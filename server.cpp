@@ -26,7 +26,7 @@ Server::Server(int port, std::string password){
         std::cout << std::strerror(errno) << std::endl;
         close(socketServidor);
         exit(1);
-    }
+    } 
 
 
     this->_pollsfd = std::vector<pollfd>(1);
