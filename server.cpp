@@ -89,8 +89,7 @@ void Server::runCmd(std::string buffer, int i)
             //Todos los comandos:
             //checkCmd(aux, tokens);
         }
-        
-    }
+    
 
 }
 
@@ -106,8 +105,8 @@ void _rmClient(const Client &c){
     }
     int fd = c.getFd();
     close(fd);
-    delete _clients[fd];
-    _clients.erase(fd);
+    delete this->_map_clients[fd];
+    this->_map_clients.erase(fd);
 }
 
 
