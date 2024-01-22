@@ -23,12 +23,6 @@
 class Client;
 
 class Server{
-    public:
-        Server(int port, std::string password);
-        void _request(int i);
-        void loop();
-        void runCmd(std::string buffer, int i);
-        void _rmClient(const Client &c);
     private:
         std::string password;
         int port;
@@ -37,6 +31,14 @@ class Server{
 
         struct pollfd serverfd_;
         std::vector<pollfd> _pollsfd;
-    
+        Server();
+    public:
+        Server(int port, std::string password);
+
+        void    _request(int i);
+        void    loop();
+        void    runCmd(std::string buffer, int i);
+        void    _rmClient(const Client &c);
+        bool    verifyPort(std::string port);
 };
 #endif

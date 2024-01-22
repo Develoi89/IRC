@@ -1,4 +1,4 @@
-#include "Login.hpp"
+#include <iostream>
 
 bool    isNum(std::string str)
 {
@@ -9,11 +9,8 @@ bool    isNum(std::string str)
     }
     return true;
 }
-Login::~Login(){}
 
-Login::Login(std::string pas): _pass(pas){}
-
-bool    Login::verifyPort(std::string port)
+bool    verifyPort(std::string port)
 {
     int num;
 

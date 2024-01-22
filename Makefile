@@ -2,10 +2,9 @@ NAME		=	ircserv
 
 SRC			=	main.cpp\
 				server.cpp\
-				Login.cpp\
 				Client.cpp
 
-HDS			=	Login.hpp\
+HDS			=	Utils.hpp\
 				server.hpp\
 				Client.hpp
 
