@@ -1,6 +1,6 @@
-#include "Utils.hpp"
 #include "server.hpp"
 #include <iostream>
+#include "Utils.hpp"
 
 int main(int argc, char **argv)
 {

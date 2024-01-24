@@ -1,4 +1,6 @@
 #include "server.hpp"
+#include "Utils.hpp"
+
 bool stop = false;
 Server::Server(int port, std::string password){
     this->port = port;
@@ -38,57 +40,56 @@ Server::Server(int port, std::string password){
 
 void handler(int signal) {(void) signal; stop = true;}
 
-void Server::runCmd(std::string buffer, int i)
+void Server::runCmd(std::vector<std::string> tkn, int i)
 {
     std::vector<std::string> tokens;
     std::string word;
-    std::stringstream str(buffer);
-    while (std::getline(str, word, ' '))
+    for (std::vector<std::string>::iterator it = tkn.begin(); it != tkn.end(); ++it)
     {
-        size_t pos;
-        while ((pos = word.find('\n')) != std::string::npos) {
-            word.erase(pos, 1);
-        }
-        if (!word.empty()) {
-            std::cout << word << std::endl;
-            tokens.push_back(word);
-        }
-    }
-    Client *aux(map_clients[this->_pollsfd[i].fd]);
-    if(aux->getPw() == false)
-    {
-        if(tokens[0] == "PASS")
-            if(tokens[1] == this->password)
-            {
-                send(this->_pollsfd[i].fd, "Conected.\n", 10, 0);
-                aux->setPw(true);
+        std::istringstream iss(*it);
+        while(std::getline(iss, word, ' '))
+        {
+            if (!word.empty()) {
+                tokens.push_back(word);
             }
-    }
-    else
-    {
-       if(aux->getRg() == false)
-       {
-        if(tokens[0] == "NICK")
-            //implementar errores y CAMBIO DE NICK -- teo NICK oet
-            aux->setNick(tokens[1]);
-        
-        if(tokens[0] == "USER"){
-            //implementar errores
-            if(aux->getNick() == "")
-                return ;
-    
-            aux->setUser(tokens[1]);
-            aux->setName(tokens[4]);
-            aux->setRg(true);
-            aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
+            std::cout << word << std::endl;
+        }
+        Client *aux(map_clients[this->_pollsfd[i].fd]);
+        if(aux->getPw() == false)
+        {
+            if(tokens[0] == "PASS")
+                if(tokens[1] == this->password)
+                {
+                    send(this->_pollsfd[i].fd, "Conected.\n", 10, 0);
+                    aux->setPw(true);
+                }
+        }
+        else
+        {
+           if(aux->getRg() == false)
+           {
+            if(tokens[0] == "NICK")
+                //implementar errores y CAMBIO DE NICK -- teo NICK oet
+                aux->setNick(tokens[1]);
+
+            if(tokens[0] == "USER"){
+                //implementar errores
+                if(aux->getNick() == "")
+                    return ;
+
+                aux->setUser(tokens[1]);
+                aux->setName(tokens[4]);
+                aux->setRg(true);
+                aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
+
+            }
+            }
+            else{
+                //Todos los comandos:
+                //checkCmd(aux, tokens);
+            }
 
         }
-        }
-        else{
-            //Todos los comandos:
-            //checkCmd(aux, tokens);
-        }
-        
     }
 
 }
@@ -128,12 +129,13 @@ void Server::_request(int i)
         return;
     }
     std::string request(buffer, bytes);
-    runCmd(request, i);
+    std::vector<std::string> cm = tkparser(request, "\r\n");
+    // std::cout << buffer << std::endl;
+    runCmd(cm, i);
 }
 
 void Server::loop(){
     this->cls = 1;
-    char buffer[1024] = {0};
     
     std::signal(SIGINT, handler);
 

@@ -14,7 +14,6 @@
 #include "Client.hpp"
 
 
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -37,8 +36,7 @@ class Server{
 
         void    _request(int i);
         void    loop();
-        void    runCmd(std::string buffer, int i);
+        void    runCmd(std::vector<std::string> tkn, int i);
         void    _rmClient(const Client &c);
-        bool    verifyPort(std::string port);
 };
 #endif

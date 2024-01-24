@@ -1,6 +1,7 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 #include "server.hpp"
+
 class Client{
     private:
         bool pw;
