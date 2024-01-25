@@ -3,11 +3,13 @@ NAME		=	ircserv
 SRC			=	main.cpp\
 				Utils.cpp\
 				server.cpp\
-				Client.cpp
+				Client.cpp\
+				Comands.cpp
 
 HDS			=	Utils.hpp\
 				server.hpp\
-				Client.hpp
+				Client.hpp\
+				Comands.hpp
 
 OBJ			=	$(SRC:.cpp=.o)
 

@@ -1,5 +1,6 @@
 #include "server.hpp"
 #include "Utils.hpp"
+#include "Comands.hpp"
 
 bool stop = false;
 Server::Server(int port, std::string password){
@@ -42,56 +43,63 @@ void handler(int signal) {(void) signal; stop = true;}
 
 void Server::runCmd(std::vector<std::string> tkn, int i)
 {
-    std::vector<std::string> tokens;
     std::string word;
     for (std::vector<std::string>::iterator it = tkn.begin(); it != tkn.end(); ++it)
     {
+        std::vector<std::string> tokens;
         std::istringstream iss(*it);
         while(std::getline(iss, word, ' '))
         {
-            if (!word.empty()) {
+            if (!word.empty()) 
+            {
                 tokens.push_back(word);
             }
-            std::cout << word << std::endl;
         }
         Client *aux(map_clients[this->_pollsfd[i].fd]);
-        if(aux->getPw() == false)
+        if(!aux->getPw())
         {
             if(tokens[0] == "PASS")
                 if(tokens[1] == this->password)
                 {
                     send(this->_pollsfd[i].fd, "Conected.\n", 10, 0);
+                    std::cout << "connected" << std::endl;
                     aux->setPw(true);
                 }
         }
         else
         {
-           if(aux->getRg() == false)
-           {
-            if(tokens[0] == "NICK")
-                //implementar errores y CAMBIO DE NICK -- teo NICK oet
-                aux->setNick(tokens[1]);
+            if(!aux->getRg())
+            {
+                if(tokens[0] == "NICK")
+                {
+                    //implementar errores y CAMBIO DE NICK -- teo NICK oet
+                    aux->setNick(tokens[1]);
+                    std::cout << "nick setted" << std::endl;
+                }
+                else if(tokens[0] == "USER")
+                {
+                    //implementar errores
+                    if(aux->getNick() == "")
+                        return ;
 
-            if(tokens[0] == "USER"){
-                //implementar errores
-                if(aux->getNick() == "")
-                    return ;
-
-                aux->setUser(tokens[1]);
-                aux->setName(tokens[4]);
-                aux->setRg(true);
-                aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
-
+                    aux->setUser(tokens[1]);
+                    aux->setName(tokens[1]);
+                    aux->setRg(true);
+                    aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
+                    std::cout << "registered" << std::endl;
+                    std::cout << aux->getNick() << std::endl;
+                    std::cout << aux->getUser() << std::endl;
+                }
             }
-            }
-            else{
+            else
+            {
                 //Todos los comandos:
-                //checkCmd(aux, tokens);
+                checkCmd(aux, tokens);
+
             }
 
         }
     }
-
 }
 
 void Server::_rmClient(const Client &c){

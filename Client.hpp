@@ -33,7 +33,6 @@ class Client{
         const bool &getRg() const {return this->rg;}
         void newMessage(std::string str);
 
-
 };
 
 #endif
