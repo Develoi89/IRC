@@ -19,10 +19,12 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include "Channel.hpp"
 class Client;
 
 class Server{
     private:
+		std::map<std::string, Channel> _channels;
         std::string password;
         int port;
         int cls;

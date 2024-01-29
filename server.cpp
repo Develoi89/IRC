@@ -61,7 +61,6 @@ void Server::runCmd(std::vector<std::string> tkn, int i)
             if(tokens[0] == "PASS")
                 if(tokens[1] == this->password)
                 {
-                    send(this->_pollsfd[i].fd, "Conected.\n", 10, 0);
                     std::cout << "connected" << std::endl;
                     aux->setPw(true);
                 }
