@@ -94,7 +94,7 @@ void Server::runCmd(std::vector<std::string> tkn, int i)
             else
             {
                 //Todos los comandos:
-                checkCmd(aux, tokens);
+                Comands::checkCmd(aux, tokens);
 
             }
 

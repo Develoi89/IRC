@@ -6,11 +6,15 @@
 #include <map>
 #include "Client.hpp"
 
-bool checkCmd(Client *aux, std::vector<std::string> tokens);
+class Comands
+{
+    private:
 
-int cmdKick(); //Eject a client from the channel
-int cmdInvite(); //Invite a client to a channel
-int cmdTopic(); //Change or view the channel topic
-int cmdMode(); //Change the channel’s mode:
+        Comands();
+        ~Comands();
 
+    public:
+
+        static bool checkCmd(Client *aux, std::vector<std::string> tokens);
+};
 #endif
