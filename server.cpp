@@ -61,7 +61,7 @@ void Server::runCmd(std::vector<std::string> tkn, int i)
             if(tokens[0] == "PASS")
                 if(tokens[1] == this->password)
                 {
-                    std::cout << "connected" << std::endl;
+                    //std::cout << "connected" << std::endl;
                     aux->setPw(true);
                 }
         }
@@ -73,7 +73,7 @@ void Server::runCmd(std::vector<std::string> tkn, int i)
                 {
                     //implementar errores y CAMBIO DE NICK -- teo NICK oet
                     aux->setNick(tokens[1]);
-                    std::cout << "nick setted" << std::endl;
+                    //std::cout << "nick setted" << std::endl;
                 }
                 else if(tokens[0] == "USER")
                 {
@@ -85,9 +85,9 @@ void Server::runCmd(std::vector<std::string> tkn, int i)
                     aux->setName(tokens[1]);
                     aux->setRg(true);
                     registerMsg(*aux);
-                    std::cout << "registered" << std::endl;
-                    std::cout << aux->getNick() << std::endl;
-                    std::cout << aux->getUser() << std::endl;
+                    // std::cout << "registered" << std::endl;
+                    // std::cout << aux->getNick() << std::endl;
+                    // std::cout << aux->getUser() << std::endl;
                 }
             }
             else
@@ -131,13 +131,12 @@ void Server::_request(int i)
     }
     if(bytes == 0)
     {
-        std::cout << "JOA" << std::endl;
         _rmClient(*this->map_clients[this->_pollsfd[i].fd]);
         return;
     }
     std::string request(buffer, bytes);
     std::vector<std::string> cm = tkparser(request, "\r\n");
-    // std::cout << buffer << std::endl;
+     //std::cout << buffer << std::endl;
     runCmd(cm, i);
 }
 

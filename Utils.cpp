@@ -5,9 +5,9 @@
 
 void registerMsg(Client &c)
 {
-    c.newMessage(" :Welcome to the irc.telo.net Network, " + c.getNick() + "!"+ c.getUser() + "@127.0.0.1");
-    c.newMessage(" :Your host is irc.telo.net, running version 1.0");
-    c.newMessage("irc.telo.net 1.0 itkol");
+    c.newMessage(std::string("001 ") + c.getNick() + " :Welcome to the irc.telo.net Network, " + c.getNick() + "!127.0.0.1");
+    c.newMessage(std::string("002 ") + c.getNick() + " :Your host is irc.telo.net, running version 1.0");
+    c.newMessage(std::string("004 ") + c.getNick() + " irc.telo.net 1.0 itkol");
 }
 
 bool    isNum(std::string str)

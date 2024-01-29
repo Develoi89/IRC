@@ -1,4 +1,5 @@
 #include "Comands.hpp"
+#include "server.hpp"
 
 int cmdKick(Client *aux, std::vector<std::string> tokens) //Eject a client from the channel
 {
@@ -32,7 +33,9 @@ int cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the channelâ€
 
 int cmdPong(Client *aux, std::string tk)
 {
-    aux->newMessage("PONG irc.telo.net " + tk);
+    Client *cl = aux;
+    cl->newMessage("PONG irc.telo.net " + tk);
+    return 0;
 }
 
 int cmdPing(Client *aux, std::vector<std::string> tokens)
@@ -44,7 +47,7 @@ int cmdPing(Client *aux, std::vector<std::string> tokens)
 
 bool Comands::checkCmd(Client *aux, std::vector<std::string> tokens)
 {
-    std::map<std::string, int(*)(Client*, std::string)> functionMap;
+    std::map<std::string, int(*)(Client*, std::vector<std::string>)> functionMap;
 
     functionMap["KICK"] = &cmdKick;
     functionMap["INVITE"] = &cmdInvite;
@@ -55,7 +58,7 @@ bool Comands::checkCmd(Client *aux, std::vector<std::string> tokens)
 
     std::string key = tokens[0];
 
-    std::map<std::string, int (*)(Client*, std::string)>::iterator iter = functionMap.find(key);
+    std::map<std::string, int (*)(Client*, std::vector<std::string>)>::iterator iter = functionMap.find(key);
     if (iter != functionMap.end()) 
     {
         iter->second(aux, tokens); 
