@@ -12,6 +12,7 @@
 #include <csignal>
 #include <map>
 #include "Client.hpp"
+#include "Utils.hpp"
 
 
 #include <sys/types.h>
@@ -21,6 +22,7 @@
 #include <arpa/inet.h>
 #include "Channel.hpp"
 class Client;
+class Channel;
 
 class Server{
     private:

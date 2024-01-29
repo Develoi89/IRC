@@ -4,11 +4,13 @@ SRC			=	main.cpp\
 				Utils.cpp\
 				server.cpp\
 				Client.cpp\
+				Channel.cpp\
 				Comands.cpp
 
 HDS			=	Utils.hpp\
 				server.hpp\
 				Client.hpp\
+				Channel.hpp\
 				Comands.hpp
 
 OBJ			=	$(SRC:.cpp=.o)

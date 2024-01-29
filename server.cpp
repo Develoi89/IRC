@@ -84,7 +84,7 @@ void Server::runCmd(std::vector<std::string> tkn, int i)
                     aux->setUser(tokens[1]);
                     aux->setName(tokens[1]);
                     aux->setRg(true);
-                    aux->newMessage("WELCOME: " + aux->getNick() + ", " + aux->getName());
+                    registerMsg(*aux);
                     std::cout << "registered" << std::endl;
                     std::cout << aux->getNick() << std::endl;
                     std::cout << aux->getUser() << std::endl;

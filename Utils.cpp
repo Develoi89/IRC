@@ -1,5 +1,14 @@
 #include <iostream>
 #include <vector>
+#include "Utils.hpp"
+#include "server.hpp"
+
+void registerMsg(Client &c)
+{
+    c.newMessage(" :Welcome to the irc.telo.net Network, " + c.getNick() + "!"+ c.getUser() + "@127.0.0.1");
+    c.newMessage(" :Your host is irc.telo.net, running version 1.0");
+    c.newMessage("irc.telo.net 1.0 itkol");
+}
 
 bool    isNum(std::string str)
 {
