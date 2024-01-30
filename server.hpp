@@ -42,5 +42,13 @@ class Server{
         void    loop();
         void    runCmd(std::vector<std::string> tkn, int i);
         void    _rmClient(const Client &c);
+        bool    checkCmd(Client *aux, std::vector<std::string> tokens);
+        int		cmdPing(Client *aux, std::vector<std::string> tokens);
+		int		cmdPong(Client *aux, std::string tk);
+		int		cmdJoin(Client *aux, std::vector<std::string> tokens);
+		int		cmdMode(Client *aux, std::vector<std::string> tokens);
+		int		cmdTopic(Client *aux, std::vector<std::string> tokens);
+		int		cmdInvite(Client *aux, std::vector<std::string> tokens);
+		int		cmdKick(Client *aux, std::vector<std::string> tokens);
 };
 #endif

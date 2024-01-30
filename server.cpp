@@ -1,6 +1,5 @@
 #include "server.hpp"
 #include "Utils.hpp"
-#include "Comands.hpp"
 
 bool stop = false;
 Server::Server(int port, std::string password){
@@ -93,7 +92,7 @@ void Server::runCmd(std::vector<std::string> tkn, int i)
             else
             {
                 //Todos los comandos:
-                Comands::checkCmd(aux, tokens);
+                Server::checkCmd(aux, tokens);
 
             }
 

@@ -2,6 +2,13 @@ NAME		=	ircserv
 
 SRC			=	main.cpp\
 				Utils.cpp\
+				Invite.cpp\
+				Join.cpp\
+				Kick.cpp\
+				Mode.cpp\
+				Ping.cpp\
+				Pong.cpp\
+				Topic.cpp\
 				server.cpp\
 				Client.cpp\
 				Channel.cpp\
@@ -10,8 +17,7 @@ SRC			=	main.cpp\
 HDS			=	Utils.hpp\
 				server.hpp\
 				Client.hpp\
-				Channel.hpp\
-				Comands.hpp
+				Channel.hpp
 
 OBJ			=	$(SRC:.cpp=.o)
 
