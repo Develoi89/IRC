@@ -122,7 +122,6 @@ void Server::_request(int i)
 {
     char buffer[1024];
     ssize_t bytes = recv(this->_pollsfd[i].fd, buffer, sizeof(buffer), 0);
-    
     if(bytes == -1)
     {
         std::cerr << "recv() error: " << std::strerror(errno) << std::endl;

@@ -12,6 +12,7 @@ bool Server::checkCmd(Client *aux, std::vector<std::string> tokens)
     functionMap["MODE"] = &Server::cmdMode;
     functionMap["JOIN"] = &Server::cmdJoin;
     functionMap["PING"] = &Server::cmdPing;
+    functionMap["PRIVMSG"] = &Server::cmdPrivmsg;
 
     std::string key = tokens[0];
 

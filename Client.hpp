@@ -15,6 +15,8 @@ class Client{
     public:
         Client(int fd);
         Client(const Client &c);
+        Client & operator =(const Client &client);
+
 
         void    setNick(std::string s) {this->nickname = s;}
         void    setName(std::string s) {this->name = s;}
