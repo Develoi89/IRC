@@ -27,7 +27,6 @@ int Server::cmdPrivmsg(Client *aux, std::vector<std::string> tokens)
         for(long i = 2; i < tokens.size(); i++){
             msg.append(" " + tokens[i]);
         }
-        std::cout << "sending to " + new_cl->getNick() + " " + msg << std::endl;
         new_cl->newMessage(msg);
     }
     else{
