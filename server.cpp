@@ -109,8 +109,8 @@ void Server::_request(int i)
         _rmClient(*this->map_clients[this->_pollsfd[i].fd]);
         return;
     }
-    std::cout << "Bytes: " << bytes << std::endl;
-    std::cout << "Buffer: " << buffer << std::endl;
+    // std::cout << "Bytes: " << bytes << std::endl;
+    // std::cout << "Buffer: " << buffer << std::endl;
 
     std::string request(buffer, bytes);
     std::vector<std::string> cm = tkparser(request, "\r\n");
