@@ -15,12 +15,17 @@ class Channel
 		std::vector<Client> _clist;
 		std::string _name;
 		std::string _pass;
+		bool	_passsetted;
 		
 	public:
 		Channel(){}
 		Channel(std::string name, Client op);
 
 		void setMsgs(std::string msg);
+		void setPass(std::string pass);
+
+		std::string getPass(){return _pass;}
+		bool passSetted(){return _passsetted;}
 
 		std::vector<Client> &getClist();
 
