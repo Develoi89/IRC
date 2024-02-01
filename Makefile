@@ -13,7 +13,9 @@ SRC			=	main.cpp\
 				Client.cpp\
 				Channel.cpp\
 				Comands.cpp\
-				Privmsg.cpp
+				Privmsg.cpp\
+				Nick.cpp\
+				User.cpp
 
 HDS			=	Utils.hpp\
 				server.hpp\
