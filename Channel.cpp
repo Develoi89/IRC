@@ -4,6 +4,13 @@ Channel::Channel(std::string name, Client op)
 {
     _name = name;
     _clist.push_back(op);
+    _passsetted = false;
+}
+
+void Channel::setPass(std::string pass)
+{
+    _pass = pass;
+    _passsetted = true;
 }
 
 void Channel::setMsgs(std::string msg)
