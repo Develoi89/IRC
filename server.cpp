@@ -110,15 +110,15 @@ void Server::_request(int i)
     }
     // std::cout << "Bytes: " << bytes << std::endl;
     // std::cout << "Buffer: " << buffer << std::endl;
-   std::map<int, Client *>::iterator it = map_clients.begin();
-   int h = 0;
-    while(it != map_clients.end()){
-        std::cout << h << " FD:  - " <<  (*it).second->getFd() << std::endl;
-        std::cout << h << " SIZE:  - " <<  map_clients.size() << std::endl;
-        std::cout << std::endl;
-        it++;
-        h++;
-    }
+//    std::map<int, Client *>::iterator it = map_clients.begin();
+//    int h = 0;
+//     while(it != map_clients.end()){
+//         std::cout << h << " FD:  - " <<  (*it).second->getFd() << std::endl;
+//         std::cout << h << " SIZE:  - " <<  map_clients.size() << std::endl;
+//         std::cout << std::endl;
+//         it++;
+//         h++;
+//     }
     std::string request(buffer, bytes);
     std::vector<std::string> cm = tkparser(request, "\r\n");
     memset(buffer, 0, sizeof(buffer));
