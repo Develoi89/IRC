@@ -16,6 +16,7 @@ class Channel
 		std::string _name;
 		std::string _pass;
 		bool	_passsetted;
+		std::string _topic;
 		
 	public:
 		Channel(){}
