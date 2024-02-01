@@ -12,7 +12,6 @@ Server::Server(int port, std::string password){
     }
 
     sockaddr_in servAddr;//esto se utiliza para almacenar la información de 
-    std::memset(&servAddr, 0, sizeof(servAddr)); //inicializa toda la estructura direccionServidor con ceros.
     servAddr.sin_family = AF_INET; //AF_INET establece el tipo de dirección como IPv4
     servAddr.sin_port = htons(this->port); //Convierte el numero del puerto para ser usada en la red
     servAddr.sin_addr.s_addr = INADDR_ANY; //el servidor aceptará conexiones en cualquier interfaz de red disponible en la máquina.
@@ -111,7 +110,15 @@ void Server::_request(int i)
     }
     // std::cout << "Bytes: " << bytes << std::endl;
     // std::cout << "Buffer: " << buffer << std::endl;
-
+   std::map<int, Client *>::iterator it = map_clients.begin();
+   int h = 0;
+    while(it != map_clients.end()){
+        std::cout << h << " FD:  - " <<  (*it).second->getFd() << std::endl;
+        std::cout << h << " SIZE:  - " <<  map_clients.size() << std::endl;
+        std::cout << std::endl;
+        it++;
+        h++;
+    }
     std::string request(buffer, bytes);
     std::vector<std::string> cm = tkparser(request, "\r\n");
     memset(buffer, 0, sizeof(buffer));
@@ -136,14 +143,24 @@ void Server::loop(){
                 if (this->_pollsfd[i].revents & POLLIN) {
                     if (this->_pollsfd[i].fd == this->serverfd_.fd)
                     {
-                        int new_fd = accept(this->serverfd_.fd, nullptr, nullptr);
+                        struct sockaddr_storage	remotaddr;
+                        socklen_t addrlen;
+                        addrlen = sizeof remotaddr;
+
+                                    
+                        int new_fd = accept(this->serverfd_.fd, (struct sockaddr*)&remotaddr, &addrlen);
                         if(new_fd == -1){
                             std::cout << std::strerror(errno) << std::endl; 
                         }
-                        this->_pollsfd[this->cls].fd = new_fd;
-                        this->_pollsfd[this->cls].events = POLLIN;
-                        this->map_clients.insert(std::pair<int, Client *>(new_fd, new Client(new_fd)));
-                        this->cls++;
+                        else
+                        {
+                            struct pollfd p;
+                            this->_pollsfd.push_back(p);
+                            this->_pollsfd[this->cls].fd = new_fd;
+                            this->_pollsfd[this->cls].events = POLLIN;
+                            this->map_clients.insert(std::pair<int, Client *>(new_fd, new Client(new_fd)));
+                            this->cls++;
+                        }
                     }
                     else
                     {
