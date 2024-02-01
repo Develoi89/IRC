@@ -50,5 +50,13 @@ class Server{
 		int		cmdTopic(Client *aux, std::vector<std::string> tokens);
 		int		cmdInvite(Client *aux, std::vector<std::string> tokens);
 		int		cmdKick(Client *aux, std::vector<std::string> tokens);
+        int     cmdPrivmsg(Client *aux, std::vector<std::string> tokens);
+        int     searchByFd(std::string target);
+        void    cmdUser(Client *aux, std::vector<std::string> tokens);
+        void    cmdNick(Client *aux, std::vector<std::string>tokens);
+        bool    existClientByUser(std::string name);
+        bool    existClientByNick(std::string nick);
+        bool    nickAllow(std::string nick);
+
 };
 #endif

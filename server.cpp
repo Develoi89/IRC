@@ -50,52 +50,29 @@ void Server::runCmd(std::vector<std::string> tkn, int i)
         while(std::getline(iss, word, ' '))
         {
             if (!word.empty()) 
-            {
                 tokens.push_back(word);
-            }
         }
         Client *aux(map_clients[this->_pollsfd[i].fd]);
         if(!aux->getPw())
         {
             if(tokens[0] == "PASS")
-                if(tokens[1] == this->password)
-                {
-                    //std::cout << "connected" << std::endl;
-                    aux->setPw(true);
+                if(tokens[1] != this->password){
+                    aux->newMessage(std::string("464 ") + " :Password incorrect");
+                    return ;
                 }
+                aux->setPw(true);
         }
         else
         {
             if(!aux->getRg())
             {
                 if(tokens[0] == "NICK")
-                {
-                    //implementar errores y CAMBIO DE NICK -- teo NICK oet
-                    aux->setNick(tokens[1]);
-                    //std::cout << "nick setted" << std::endl;
-                }
+                    cmdNick(aux, tokens);
                 else if(tokens[0] == "USER")
-                {
-                    //implementar errores
-                    if(aux->getNick() == "")
-                        return ;
-
-                    aux->setUser(tokens[1]);
-                    aux->setName(tokens[1]);
-                    aux->setRg(true);
-                    registerMsg(*aux);
-                    // std::cout << "registered" << std::endl;
-                    // std::cout << aux->getNick() << std::endl;
-                    // std::cout << aux->getUser() << std::endl;
-                }
+                    cmdUser(aux, tokens);
             }
             else
-            {
-                //Todos los comandos:
                 Server::checkCmd(aux, tokens);
-
-            }
-
         }
     }
 }
@@ -122,7 +99,6 @@ void Server::_request(int i)
 {
     char buffer[1024];
     ssize_t bytes = recv(this->_pollsfd[i].fd, buffer, sizeof(buffer), 0);
-    
     if(bytes == -1)
     {
         std::cerr << "recv() error: " << std::strerror(errno) << std::endl;
@@ -135,6 +111,8 @@ void Server::_request(int i)
     }
     std::string request(buffer, bytes);
     std::vector<std::string> cm = tkparser(request, "\r\n");
+    if(cm.size() == 0)
+        return ;
      //std::cout << buffer << std::endl;
     runCmd(cm, i);
 }
