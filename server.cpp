@@ -154,8 +154,8 @@ void Server::loop(){
                         }
                         else
                         {
-                            struct pollfd p;
-                            this->_pollsfd.push_back(p);
+                            struct pollfd pls;
+                            this->_pollsfd.push_back(pls);
                             this->_pollsfd[this->cls].fd = new_fd;
                             this->_pollsfd[this->cls].events = POLLIN;
                             this->map_clients.insert(std::pair<int, Client *>(new_fd, new Client(new_fd)));
