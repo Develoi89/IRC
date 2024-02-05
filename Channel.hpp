@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <set>
 #include "Client.hpp"
 
 class Client;
@@ -15,8 +16,14 @@ class Channel
 		std::vector<Client> _clist;
 		std::string _name;
 		std::string _pass;
-		bool	_passsetted;
 		std::string _topic;
+		std::string _status;
+
+		std::set<int> _ops;
+		std::set<int> _members;
+		std::set<int> _inviteds;
+
+		bool	_passsetted;
 		
 	public:
 		Channel(){}
@@ -28,7 +35,16 @@ class Channel
 		std::string getPass(){return _pass;}
 		bool passSetted(){return _passsetted;}
 		std::string getName(){return _name;}
+		std::string getTopic(){return _topic;}
 		std::vector<Client> &getClist();
+
+		std::set<int> getOps(){return _ops;}
+		std::set<int> getMem(){return _members;}
+		std::set<int> getInv(){return _inviteds;}
+
+		void setOps(int fd);
+		void setMem(int fd);
+		void setInv(int fd);
 
 		std::vector<std::string> &getMsgs();
 };
