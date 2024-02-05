@@ -27,7 +27,7 @@ class Channel
 
 		std::string getPass(){return _pass;}
 		bool passSetted(){return _passsetted;}
-
+		std::string getName(){return _name;}
 		std::vector<Client> &getClist();
 
 		std::vector<std::string> &getMsgs();
