@@ -1,6 +1,30 @@
 #include "server.hpp"
 #include "Channel.hpp"
 
+void Server::respIrssi(Client *aux, Channel *ch)
+{
+	aux->newMessage(std::string("332 ") + aux->getNick() + " " + ch->getName() + ": " + ch->getTopic());
+	std::cout << std::string("332 ") + aux->getNick() + " " + ch->getName() + ": " + ch->getTopic() << std::endl;
+	aux->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + ": " + ch->getTopic() + _currentTime());
+	std::cout << std::string("333 ") + aux->getNick() + " " + ch->getName() + ": " + ch->getTopic() + _currentTime() << std::endl;
+	aux->newMessage(std::string("353 ") + aux->getNick() + ch->getName() + ": Segfault.");
+	std::cout << std::string("353 ") + aux->getNick() + ch->getName() + ": Segfault." << std::endl;
+	for (std::set<int>::const_iterator it = ch->getMem().begin(); it != ch->getMem().end(); ++it)
+    {
+		std::cout << "aloha" << std::endl;
+        std::string prefix = "";
+		for (std::set<int>::const_iterator is = ch->getOps().begin(); is != ch->getOps().end(); ++is)
+		{
+        if (*is == (aux->getFd()))
+            prefix = "@";
+		aux->newMessage(std::string("353 ") + aux->getNick() + ch->getName() + ": "  + prefix + aux->getNick());
+		std::cout << std::string("353 ") + aux->getNick() + ch->getName() + ": " + prefix + aux->getNick() << std::endl;
+		}
+    }
+    aux->newMessage(std::string("366 ") + aux->getName() + " " + ch->getName() + " :End of /NAMES list");
+	std::cout << std::string("366 ") + aux->getName() + " " + ch->getName() + " :End of /NAMES list" << std::endl;
+}
+
 std::vector<std::string> splitByComa(std::string str)
 {
     std::vector<std::string> final;
@@ -55,15 +79,18 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 				std::cout << ch[i] << " need a pass." << std::endl;
 			else if(i >= ps.size() && !iter->second.passSetted()){
 				iter->second.getClist().push_back(*aux);
-				std::cout << "1Joined in " << key << " Channel." << std::endl;
+				iter->second.setMem(aux->getFd());
+				respIrssi(aux, &iter->second);
 			}
 			else if (i <= ps.size() && ps[i] == iter->second.getPass() && iter->second.passSetted()){
             	iter->second.getClist().push_back(*aux);
-				std::cout << "2Joined in " << key << " Channel." << std::endl;
+				iter->second.setMem(aux->getFd());
+				respIrssi(aux, &iter->second);
 			}
 			else if (i <= ps.size() && !iter->second.passSetted()){
 				iter->second.getClist().push_back(*aux);
-				std::cout << "3Joined in " << key << " Channel." << std::endl;
+				iter->second.setMem(aux->getFd());
+				respIrssi(aux, &iter->second);
 			}
 			else
 				std::cout << "wrong pass." << std::endl;
@@ -76,8 +103,10 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 				first.setPass(ps[i]);
 				std::cout << first.getPass() << " as pass setted for " << key << " channel." << std::endl;
 			}
+			first.setOps(aux->getFd());
+			first.setMem(aux->getFd());
 			_channels[key] = first;
-			std::cout << "Crerated " << key << " channel." << std::endl;
+			respIrssi(aux, &first);
         }
         i++;
     }

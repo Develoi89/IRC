@@ -54,9 +54,13 @@ class Server{
         int     searchByFd(std::string target);
         void    cmdUser(Client *aux, std::vector<std::string> tokens);
         void    cmdNick(Client *aux, std::vector<std::string>tokens);
+        void    respIrssi(Client *aux, Channel *ch);
         bool    existClientByUser(std::string name);
         bool    existClientByNick(std::string nick);
         bool    nickAllow(std::string nick);
+        
+
+        std::string _currentTime();
 
 };
 #endif

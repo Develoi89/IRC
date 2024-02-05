@@ -173,5 +173,14 @@ void Server::loop(){
             
 }
 
+std::string Server::_currentTime()
+{
+    time_t t = std::time(0);
+    struct tm *now = std::localtime(&t);
+    std::string time(asctime(now));
+    time.erase(--time.end());
+    return time;
+}
+
 
 
