@@ -13,16 +13,16 @@ int Server::searchByFd(std::string target){
 
 int Server::cmdPrivmsg(Client *aux, std::vector<std::string> tokens)
 {
-    for(int i = 0; i < tokens.size(); i++){
-        std::cout << tokens[i] << std::endl;
-    }
+    // for(int i = 0; i < tokens.size(); i++){
+    //     std::cout << tokens[i] << std::endl;
+    // }
     std::string target_name = tokens[1];
     std::string msg = "";
     int fd_target = searchByFd(target_name);
-    Client *new_cl = map_clients[fd_target];
     if(fd_target != 0){
         if(tokens[2][0] != ':')
             tokens[2] = ":" + tokens[2];
+        Client *new_cl = map_clients[fd_target];
         msg = ":" + aux->getNick() + "!" + aux->getNick() + "@127.0.0.1 PRIVMSG " + new_cl->getNick();
         for(long i = 2; i < tokens.size(); i++){
             msg.append(" " + tokens[i]);
