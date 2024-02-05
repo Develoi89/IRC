@@ -3,22 +3,34 @@
 
 void Server::respIrssi(Client *aux, Channel *ch)
 {
-	aux->newMessage(std::string("332 ") + aux->getNick() + " " + ch->getName() + ": " + ch->getTopic());
-	std::cout << std::string("332 ") + aux->getNick() + " " + ch->getName() + ": " + ch->getTopic() << std::endl;
-	aux->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + ": " + ch->getTopic() + _currentTime());
-	std::cout << std::string("333 ") + aux->getNick() + " " + ch->getName() + ": " + ch->getTopic() + _currentTime() << std::endl;
-	aux->newMessage(std::string("353 ") + aux->getNick() + ch->getName() + ": Segfault.");
-	std::cout << std::string("353 ") + aux->getNick() + ch->getName() + ": Segfault." << std::endl;
-	for (std::set<int>::const_iterator it = ch->getMem().begin(); it != ch->getMem().end(); ++it)
+	if(ch->getTopic() != ""){
+		aux->newMessage(std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic());
+		std::cout << std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic() << std::endl;
+		aux->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime());
+		std::cout << std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime() << std::endl;
+	}else{
+		aux->newMessage(std::string("331 ") + aux->getNick() + " " + ch->getName() + " :No topic is set");
+	}
+
+	std::string	intro = aux->getNick() + "!" + aux->getUser() + "!127.0.0.1" + " JOIN " + ch->getName();
+		const std::set<int>& _members = ch->getMem();  
+
+	for (std::set<int>::const_iterator it = _members.begin(); it != _members.end(); ++it) {
+        aux->newMessage(intro);
+    }
+	aux->newMessage(std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :" + ""+ "Segfault.");
+	const std::set<int>& members = ch->getMem();  
+	for (std::set<int>::const_iterator it = members.begin(); it != members.end(); ++it)
     {
 		std::cout << "aloha" << std::endl;
         std::string prefix = "";
-		for (std::set<int>::const_iterator is = ch->getOps().begin(); is != ch->getOps().end(); ++is)
+		const std::set<int>& opera = ch->getOps();  
+		for (std::set<int>::const_iterator is = opera.begin(); is != opera.end(); ++is)
 		{
         if (*is == (aux->getFd()))
             prefix = "@";
-		aux->newMessage(std::string("353 ") + aux->getNick() + ch->getName() + ": "  + prefix + aux->getNick());
-		std::cout << std::string("353 ") + aux->getNick() + ch->getName() + ": " + prefix + aux->getNick() << std::endl;
+		aux->newMessage(std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick());
+		std::cout << std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick() << std::endl;
 		}
     }
     aux->newMessage(std::string("366 ") + aux->getName() + " " + ch->getName() + " :End of /NAMES list");

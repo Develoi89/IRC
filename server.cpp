@@ -109,7 +109,7 @@ void Server::_request(int i)
         return;
     }
     // std::cout << "Bytes: " << bytes << std::endl;
-    // std::cout << "Buffer: " << buffer << std::endl;
+    //std::cout << "Buffer: " << buffer << std::endl;
 //    std::map<int, Client *>::iterator it = map_clients.begin();
 //    int h = 0;
 //     while(it != map_clients.end()){
