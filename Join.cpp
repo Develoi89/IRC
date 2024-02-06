@@ -26,8 +26,8 @@ void Server::respIrssi(Client *aux, Channel *ch)
 		const std::set<int>& opera = ch->getOps();  
 		for (std::set<int>::const_iterator is = opera.begin(); is != opera.end(); ++is)
 		{
-        if (*is == *it)
-            prefix = "@";
+        	if (*is == *it)
+            	prefix = "@";
 		aux->newMessage(std::string("353 ") + map_clients[*it]->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick());
 		// std::cout << std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick() << std::endl;
 		}
@@ -77,7 +77,7 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
     while(i < ch.size())
     {
         std::string key = ch[i];
-
+		
         std::map<std::string, Channel>::iterator iter = _channels.find(key);
 		
         if (iter != _channels.end())
