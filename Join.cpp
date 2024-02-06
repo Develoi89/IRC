@@ -29,7 +29,8 @@ void Server::respIrssi(Client *aux, Channel *ch)
 		{
         if (*is == (aux->getFd()))
             prefix = "@";
-		aux->newMessage(std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick());
+		std::cout << *it << std::endl;
+		aux->newMessage(std::string("353 ") + map_clients[*it]->getNick() + " = " + ch->getName() + " :"  + prefix + map_clients[*it]->getNick());
 		std::cout << std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick() << std::endl;
 		}
     }

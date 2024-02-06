@@ -30,7 +30,7 @@ class Server{
         std::string password;
         int port;
         int cls;
-        std::map<int, Client *>map_clients;
+        std::map<int, Client *> map_clients;
 
         struct pollfd serverfd_;
         std::vector<pollfd> _pollsfd;
