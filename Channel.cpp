@@ -2,7 +2,7 @@
 
 Channel::Channel(std::string name, Client op)
 {
-    _topic = "hola mundo.";
+    //_topic = "hola mundo.";
     _name = name;
     _clist.push_back(op);
     _passsetted = false;

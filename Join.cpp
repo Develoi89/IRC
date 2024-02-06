@@ -12,11 +12,11 @@ void Server::respIrssi(Client *aux, Channel *ch)
 		aux->newMessage(std::string("331 ") + aux->getNick() + " " + ch->getName() + " :No topic is set");
 	}
 
-	std::string	intro = aux->getNick() + "!" + aux->getUser() + "!127.0.0.1" + " JOIN " + ch->getName();
+	std::string	intro = aux->getNick() + "!" + aux->getUser() + "@127.0.0.1" + " JOIN " + ch->getName();
 		const std::set<int>& _members = ch->getMem();  
 
 	for (std::set<int>::const_iterator it = _members.begin(); it != _members.end(); ++it) {
-        aux->newMessage(intro);
+        map_clients[*it]->newMessage(intro);
     }
 	aux->newMessage(std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :" + ""+ "Segfault.");
 	const std::set<int>& members = ch->getMem();  
