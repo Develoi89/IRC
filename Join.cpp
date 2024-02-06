@@ -5,9 +5,9 @@ void Server::respIrssi(Client *aux, Channel *ch)
 {
 	if(ch->getTopic() != ""){
 		aux->newMessage(std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic());
-		std::cout << std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic() << std::endl;
+		// std::cout << std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic() << std::endl;
 		aux->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime());
-		std::cout << std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime() << std::endl;
+		// std::cout << std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime() << std::endl;
 	}else{
 		aux->newMessage(std::string("331 ") + aux->getNick() + " " + ch->getName() + " :No topic is set");
 	}
@@ -18,20 +18,18 @@ void Server::respIrssi(Client *aux, Channel *ch)
 	for (std::set<int>::const_iterator it = _members.begin(); it != _members.end(); ++it) {
         map_clients[*it]->newMessage(intro);
     }
-	aux->newMessage(std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :" + ""+ "Segfault.");
+	aux->newMessage(std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :" + ""+ "SegfaultBot.");
 	const std::set<int>& members = ch->getMem();  
 	for (std::set<int>::const_iterator it = members.begin(); it != members.end(); ++it)
     {
-		std::cout << "aloha" << std::endl;
         std::string prefix = "";
 		const std::set<int>& opera = ch->getOps();  
 		for (std::set<int>::const_iterator is = opera.begin(); is != opera.end(); ++is)
 		{
-        if (*is == (aux->getFd()))
+        if (*is == *it)
             prefix = "@";
-		std::cout << *it << std::endl;
-		aux->newMessage(std::string("353 ") + map_clients[*it]->getNick() + " = " + ch->getName() + " :"  + prefix + map_clients[*it]->getNick());
-		std::cout << std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick() << std::endl;
+		aux->newMessage(std::string("353 ") + map_clients[*it]->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick());
+		// std::cout << std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick() << std::endl;
 		}
     }
     aux->newMessage(std::string("366 ") + aux->getName() + " " + ch->getName() + " :End of /NAMES list");
