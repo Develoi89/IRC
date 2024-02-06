@@ -69,11 +69,19 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 	std::vector<std::string> ps;
 
     ch = splitByComa(tokens[1]);
+	// for (std::vector<std::string>::iterator it = ch.begin(); it != ch.end(); it++)
+	// {
+	// 	if(it[0] != "#" && it[0] != "&")
+	// 	{
+	// 		it->erase();
+	// 		aux->newMessage(std::string("476 ") + *it + " :Bad Channel Mask");
+	// 	}
+	// }
+	
     if(tokens.size() > 2)
         ps = splitByComa(tokens[2]);
 
     int i = 0;
-	//std::cout << ps.size() << std::endl;
     while(i < ch.size())
     {
         std::string key = ch[i];
@@ -82,26 +90,37 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 		
         if (iter != _channels.end())
 		{
-			// std::cout << "i: " << i << std::endl;
-			// std::cout  <<"GET PASS: " <<  iter->second.getPass() << std::endl;
-			// std::cout  <<"ITER PASS: " <<  iter->second.passSetted() << std::endl;
-
 			if (i >= ps.size() && iter->second.passSetted())
 				std::cout << ch[i] << " need a pass." << std::endl;
 			else if(i >= ps.size() && !iter->second.passSetted()){
+				if(key[0] != 35 && key[0] != 38)
+					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
+				else
+				{
 				iter->second.getClist().push_back(*aux);
 				iter->second.setMem(aux->getFd());
 				respIrssi(aux, &iter->second);
+				}
 			}
 			else if (i <= ps.size() && ps[i] == iter->second.getPass() && iter->second.passSetted()){
+				if(key[0] != 35 && key[0] != 38)
+					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
+				else
+				{
             	iter->second.getClist().push_back(*aux);
 				iter->second.setMem(aux->getFd());
 				respIrssi(aux, &iter->second);
+				}
 			}
 			else if (i <= ps.size() && !iter->second.passSetted()){
+				if(key[0] != 35 && key[0] != 38)
+					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
+				else
+				{
 				iter->second.getClist().push_back(*aux);
 				iter->second.setMem(aux->getFd());
 				respIrssi(aux, &iter->second);
+				}
 			}
 			else
 				std::cout << "wrong pass." << std::endl;
@@ -109,6 +128,10 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
         else
         {
             Channel first(key, *aux);
+			if(key[0] != 35 && key[0] != 38)
+					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
+			else
+			{
 			if (i < ps.size())
 			{
 				first.setPass(ps[i]);
@@ -118,6 +141,7 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 			first.setMem(aux->getFd());
 			_channels[key] = first;
 			respIrssi(aux, &first);
+			}
         }
         i++;
     }
