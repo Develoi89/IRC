@@ -27,11 +27,11 @@ void Server::respIrssi(Client *aux, Channel *ch)
 		const std::set<int>& opera = ch->getOps();  
 		for (std::set<int>::const_iterator is = opera.begin(); is != opera.end(); ++is)
 		{
-        if (*is == (aux->getFd()))
-            prefix = "@";
+			if (*is == (aux->getFd()))
+				prefix = "@";
 		std::cout << *it << std::endl;
-		aux->newMessage(std::string("353 ") + map_clients[*it]->getNick() + " = " + ch->getName() + " :"  + prefix + map_clients[*it]->getNick());
-		std::cout << std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick() << std::endl;
+			aux->newMessage(std::string("353 ") + map_clients[*it]->getNick() + " = " + ch->getName() + " :"  + prefix + map_clients[*it]->getNick());
+			std::cout << std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick() << std::endl;
 		}
     }
     aux->newMessage(std::string("366 ") + aux->getName() + " " + ch->getName() + " :End of /NAMES list");
