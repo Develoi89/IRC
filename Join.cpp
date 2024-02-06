@@ -28,12 +28,12 @@ void Server::respIrssi(Client *aux, Channel *ch)
 		{
         if (*is == *it)
             prefix = "@";
-		aux->newMessage(std::string("353 ") + map_clients[*it]->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick());
+		aux->newMessage(std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + map_clients[*it]->getNick());
 		// std::cout << std::string("353 ") + aux->getNick() + " = " + ch->getName() + " :"  + prefix + aux->getNick() << std::endl;
 		}
     }
-    aux->newMessage(std::string("366 ") + aux->getName() + " " + ch->getName() + " :End of /NAMES list");
-	std::cout << std::string("366 ") + aux->getName() + " " + ch->getName() + " :End of /NAMES list" << std::endl;
+    aux->newMessage(std::string("366 ") + aux->getNick() + " " + ch->getName() + " :End of /NAMES list");
+	// std::cout << std::string("366 ") + aux->getName() + " " + ch->getName() + " :End of /NAMES list" << std::endl;
 }
 
 std::vector<std::string> splitByComa(std::string str)
