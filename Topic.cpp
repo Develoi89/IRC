@@ -1,7 +1,7 @@
 #include "server.hpp"
 #include "Channel.hpp"
 
-int Server::cmdTopic(Client *aux, std::vector<std::string> tokens) //Change or view the channel topic
+void Server::cmdTopic(Client *aux, std::vector<std::string> tokens) //Change or view the channel topic
 {
      if(tokens.size() < 2){
         aux->newMessage(std::string("461 ") + aux->getNick() + tokens[0] + ":Not enough parameters");

@@ -47,7 +47,7 @@ class Server{
 		int		cmdPong(Client *aux, std::string tk);
 		int		cmdJoin(Client *aux, std::vector<std::string> tokens);
 		int		cmdMode(Client *aux, std::vector<std::string> tokens);
-		int		cmdTopic(Client *aux, std::vector<std::string> tokens);
+		void		cmdTopic(Client *aux, std::vector<std::string> tokens);
 		int		cmdInvite(Client *aux, std::vector<std::string> tokens);
 		int		cmdKick(Client *aux, std::vector<std::string> tokens);
         int     cmdPrivmsg(Client *aux, std::vector<std::string> tokens);
@@ -61,6 +61,7 @@ class Server{
         int     sendChannel(Client *aux, std::vector<std::string> tokens, std::string target);
         int     sendUser(Client *aux, std::vector<std::string> tokens, std::string target);
         Channel     findChannelByName(std::string name);
+        Client     *findClientByNick(std::string name);
         
 
         std::string _currentTime();
