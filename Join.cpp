@@ -76,7 +76,7 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
     while(i < ch.size())
     {
         std::string key = ch[i];
-
+		
         std::map<std::string, Channel>::iterator iter = _channels.find(key);
 		
         if (iter != _channels.end())

@@ -58,6 +58,9 @@ class Server{
         bool    existClientByUser(std::string name);
         bool    existClientByNick(std::string nick);
         bool    nickAllow(std::string nick);
+        int     sendChannel(Client *aux, std::vector<std::string> tokens, std::string target);
+        int     sendUser(Client *aux, std::vector<std::string> tokens, std::string target);
+        Channel     findChannelByName(std::string name);
         
 
         std::string _currentTime();
