@@ -44,3 +44,14 @@ void Channel::setInv(int fd)
 {
     _inviteds.insert(fd);
 }
+
+bool Channel::isMember(int searchNumber) const {
+    std::set<int>::const_iterator it = _members.find(searchNumber);
+    return it != _members.end();
+}
+
+bool Channel::isOps(int searchNumber) const {
+    std::set<int>::const_iterator it = _ops.find(searchNumber);
+    return it != _ops.end();
+}
+
