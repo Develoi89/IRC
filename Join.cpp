@@ -62,22 +62,13 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 {
     if(tokens.size() < 2)
     {
-        std::cout << "not enought arguments." << std::endl;
+        aux->newMessage("461 " + aux->getNick() + " JOIN :Not enought arguments.");
         return 0;
     }
     std::vector<std::string> ch;
 	std::vector<std::string> ps;
 
     ch = splitByComa(tokens[1]);
-	// for (std::vector<std::string>::iterator it = ch.begin(); it != ch.end(); it++)
-	// {
-	// 	if(it[0] != "#" && it[0] != "&")
-	// 	{
-	// 		it->erase();
-	// 		aux->newMessage(std::string("476 ") + *it + " :Bad Channel Mask");
-	// 	}
-	// }
-	
     if(tokens.size() > 2)
         ps = splitByComa(tokens[2]);
 
@@ -91,7 +82,7 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
         if (iter != _channels.end())
 		{
 			if (i >= ps.size() && iter->second.passSetted())
-				std::cout << ch[i] << " need a pass." << std::endl;
+				aux->newMessage("475 " + aux->getNick() + key + " :Cannot join channel (+k)");
 			else if(i >= ps.size() && !iter->second.passSetted()){
 				if(key[0] != 35 && key[0] != 38)
 					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
@@ -123,7 +114,7 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 				}
 			}
 			else
-				std::cout << "wrong pass." << std::endl;
+				aux->newMessage("475 " + aux->getNick() + key + " :Cannot join channel (+k)");
 		}
         else
         {
@@ -133,10 +124,7 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 			else
 			{
 			if (i < ps.size())
-			{
 				first.setPass(ps[i]);
-				std::cout << first.getPass() << " as pass setted for " << key << " channel." << std::endl;
-			}
 			first.setOps(aux->getFd());
 			first.setMem(aux->getFd());
 			_channels[key] = first;
