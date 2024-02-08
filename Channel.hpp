@@ -36,7 +36,11 @@ class Channel
 		bool passSetted(){return _passsetted;}
 		std::string getName(){return _name;}
 		std::string getTopic(){return _topic;}
+		void setTopic(std::string s){this->_topic = s;}
 		std::vector<Client> &getClist();
+		bool isMember(int searchNumber)const;
+		bool isOps(int searchNumber)const;
+
 
 		std::set<int> getOps(){return _ops;}
 		std::set<int> getMem(){return _members;}
