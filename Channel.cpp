@@ -1,5 +1,29 @@
 #include "Channel.hpp"
 
+void Channel::deleteClient(int fd)
+{
+    std::vector<Client>::iterator iter;
+    for (iter = _clist.begin(); iter != _clist.end(); iter++)
+        if(iter->getFd() == fd)
+        {
+            _clist.erase(iter);
+            break;
+        }
+}
+
+void Channel::deleteMem(int fd)
+{
+    _members.erase(fd);
+}
+void Channel::deleteOp(int fd)
+{
+    _ops.erase(fd);
+}
+void Channel::deleteInv(int fd)
+{
+    _inviteds.erase(fd);
+}
+
 Channel::Channel(std::string name, Client op)
 {
     //_topic = "hola mundo.";
