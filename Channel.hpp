@@ -41,6 +41,10 @@ class Channel
 		bool isMember(int searchNumber)const;
 		bool isOps(int searchNumber)const;
 
+		void deleteMem(int fd);
+		void deleteOp(int fd);
+		void deleteInv(int fd);
+		void deleteClient(int fd);
 
 		std::set<int> getOps(){return _ops;}
 		std::set<int> getMem(){return _members;}
