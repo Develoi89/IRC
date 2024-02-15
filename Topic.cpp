@@ -1,19 +1,21 @@
 #include "server.hpp"
 #include "Channel.hpp"
 
-void Server::cmdTopic(Client *aux, std::vector<std::string> tokens) //Change or view the channel topic
+int Server::cmdTopic(Client *aux, std::vector<std::string> tokens) //Change or view the channel topic
 {
      if(tokens.size() < 2){
-        aux->newMessage(std::string("461 ") + aux->getNick() + tokens[0] + ":Not enough parameters");
+        aux->newMessage(std::string("461 ") + aux->getNick() + " " + tokens[0] + ":Not enough parameters");
         return 0;
     }
 
-    Channel *ch = &_channels[tokens[1]];
-	if (ch->getName() == "")
+    int exists = findChannelByName(tokens[1]);
+
+	if (exists == 0)
 	{
 		aux->newMessage(std::string("403 ") +  aux->getNick() + " " + tokens[1] + " :No such channel");
         return 0;
 	}
+    Channel *ch = &_channels[tokens[1]];
 
     if (!ch->isMember(aux->getFd())) {
         aux->newMessage(std::string("442 ") +  aux->getNick() + " " + tokens[1] + " :You're not on that channel");

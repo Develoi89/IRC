@@ -2,7 +2,11 @@
 
 int Server::cmdKick(Client *aux, std::vector<std::string> tokens) //Eject a client from the channel
 {
-    std::cout << "KICK called" << std::endl;
+    if(tokens.size() < 3){
+        aux->newMessage(std::string("461 ") + aux->getNick() + " " + tokens[0] + ":Not enough parameters");
+        return 0;
+    }
+
     std::string key = tokens[1];
     std::map<std::string, Channel>::iterator iter = _channels.find(key);
     if (iter != _channels.end())
@@ -17,7 +21,17 @@ int Server::cmdKick(Client *aux, std::vector<std::string> tokens) //Eject a clie
                     if(iter->second.isMember(it->second->getFd()))
                     {
                         iter->second.deleteMem(it->second->getFd());
-                        it->second->newMessage("You kicked of " + iter->second.getName() + " channel.");
+                        if(tokens.size() == 3 ){
+                            it->second->newMessage("You kicked of " + iter->second.getName() + " channel.");
+                        }
+                        if(tokens.size() > 3){
+                            std::string msg = "";
+                            if (tokens[3][0] != ':')
+                                tokens[3] = ":" + tokens[3];
+                            for (long i = 3; i < tokens.size(); i++)
+                                msg.append(" " + tokens[i]);
+                            it->second->newMessage("You kicked of " + iter->second.getName() + " channel for this reason" + msg);
+                        }
                         iter->second.deleteClient(it->second->getFd());
                         if(iter->second.isOps(it->second->getFd()))
                             iter->second.deleteOp(it->second->getFd());

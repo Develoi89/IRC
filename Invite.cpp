@@ -16,18 +16,18 @@ Client *Server::findClientByNick(std::string name){
 int Server::cmdInvite(Client *aux, std::vector<std::string> tokens) //Invite a client to a channel
 {
     if(tokens.size() < 3){
-        aux->newMessage(std::string("461 ") + aux->getNick() + tokens[0] + ":Not enough parameters");
+        aux->newMessage(std::string("461 ") + aux->getNick() + " " + tokens[0] + ":Not enough parameters");
         return 0;
     }
     Client *cl = findClientByNick(tokens[1]);
 
-    Channel *ch = &_channels[tokens[2]];
-	if (ch->getName() == "")
+    int exists = findChannelByName(tokens[2]);
+	if (exists == 0)
 	{
 		aux->newMessage(std::string("403 ") +  aux->getNick() + " " + tokens[2] + " :No such channel");
         return 0;
 	}
-
+    Channel *ch = &_channels[tokens[2]];
     if (!ch->isMember(aux->getFd())) {
         aux->newMessage(std::string("442 ") +  aux->getNick() + " " + tokens[2] + " :You're not on that channel");
         return 0;

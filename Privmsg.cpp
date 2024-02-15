@@ -10,18 +10,18 @@ int Server::searchByFd(std::string target){
     }
     return 0;
 }
-Channel Server::findChannelByName(std::string name){
+int Server::findChannelByName(std::string name){
     std::map<std::string, Channel>::iterator it = _channels.find(name);
     if (it != _channels.end()) {
-        return(it->second);
+        return 1;
     }else{
-        return Channel(); 
+        return 0; 
     }
 }
 
 int Server::sendChannel(Client *aux, std::vector<std::string> tokens, std::string target){
-    Channel ch = findChannelByName(target);
-    if(ch.getName() == ""){
+    int exists = findChannelByName(target);
+    if(exists == 0){
         aux->newMessage(std::string("403 ") +aux->getNick() + " " + target + " :No such channel");
         return 0;
     }
@@ -29,15 +29,22 @@ int Server::sendChannel(Client *aux, std::vector<std::string> tokens, std::strin
         aux->newMessage(std::string("412 ") + aux->getNick() + " :No text to send");
         return 0;
     }
-	std::string	msg = ":" + aux->getNick() + " PRIVMSG " + ch.getName();
+    Channel *ch = &_channels[tokens[1]];
+    if (!ch->isMember(aux->getFd())) {
+        aux->newMessage(std::string("442 ") +  aux->getNick() + " " + tokens[2] + " :You're not on that channel");
+        return 0;
+    }
+
+	std::string	msg = ":" + aux->getNick() + " PRIVMSG " + ch->getName();
 	if (tokens[2][0] != ':')
 		tokens[2] = ":" + tokens[2];
 	for (long i = 2; i < tokens.size(); i++)
 		msg.append(" " + tokens[i]);
-	//_channels[tst]->sendMsg(*client, message);
-    const std::set<int>& _members = ch.getMem();  
+    const std::set<int>& _members = ch->getMem();  
 	for (std::set<int>::const_iterator it = _members.begin(); it != _members.end(); ++it) {
-        map_clients[*it]->newMessage(msg);
+        if(map_clients[*it]->getName() != aux->getName()){
+            map_clients[*it]->newMessage(msg);
+        }
     }
     return 0;
 }
