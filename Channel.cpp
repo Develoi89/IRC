@@ -31,6 +31,11 @@ Channel::Channel(std::string name, Client op)
     _clist.push_back(op);
     _passsetted = false;
     _status = "\"@\", 0x40";
+    _mode['i'] = false;
+    _mode['t'] = false;
+    _mode['k'] = false;
+    _mode['o'] = false;
+    _mode['l'] = false;
 }
 
 void Channel::setPass(std::string pass)
@@ -69,13 +74,21 @@ void Channel::setInv(int fd)
     _inviteds.insert(fd);
 }
 
-bool Channel::isMember(int searchNumber) const {
+bool Channel::isMember(int searchNumber) const 
+{
     std::set<int>::const_iterator it = _members.find(searchNumber);
     return it != _members.end();
 }
 
-bool Channel::isOps(int searchNumber) const {
+bool Channel::isOps(int searchNumber) const 
+{
     std::set<int>::const_iterator it = _ops.find(searchNumber);
     return it != _ops.end();
+}
+
+bool Channel::isInvited(int searchNumber)const
+{
+    std::set<int>::const_iterator it = _inviteds.find(searchNumber);
+    return it != _inviteds.end();
 }
 

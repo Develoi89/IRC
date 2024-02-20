@@ -88,9 +88,14 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
 				else
 				{
-				iter->second.getClist().push_back(*aux);
-				iter->second.setMem(aux->getFd());
-				respIrssi(aux, &iter->second);
+					if((iter->second.getMode('i') && iter->second.isInvited(aux->getFd())) || (!iter->second.getMode('i')))
+					{
+						iter->second.getClist().push_back(*aux);
+						iter->second.setMem(aux->getFd());
+						respIrssi(aux, &iter->second);
+					}
+					else
+						aux->newMessage("473 " + aux->getNick() + key + " :Cannot join channel (+i)");
 				}
 			}
 			else if (i <= ps.size() && ps[i] == iter->second.getPass() && iter->second.passSetted()){
@@ -98,9 +103,14 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
 				else
 				{
-            	iter->second.getClist().push_back(*aux);
-				iter->second.setMem(aux->getFd());
-				respIrssi(aux, &iter->second);
+					if((iter->second.getMode('i') && iter->second.isInvited(aux->getFd())) || (!iter->second.getMode('i')))
+					{
+						iter->second.getClist().push_back(*aux);
+						iter->second.setMem(aux->getFd());
+						respIrssi(aux, &iter->second);
+					}
+					else
+						aux->newMessage("473 " + aux->getNick() + key + " :Cannot join channel (+i)");
 				}
 			}
 			else if (i <= ps.size() && !iter->second.passSetted()){
@@ -108,9 +118,14 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
 				else
 				{
-				iter->second.getClist().push_back(*aux);
-				iter->second.setMem(aux->getFd());
-				respIrssi(aux, &iter->second);
+					if((iter->second.getMode('i') && iter->second.isInvited(aux->getFd())) || (!iter->second.getMode('i')))
+					{
+						iter->second.getClist().push_back(*aux);
+						iter->second.setMem(aux->getFd());
+						respIrssi(aux, &iter->second);
+					}
+					else
+						aux->newMessage("473 " + aux->getNick() + key + " :Cannot join channel (+i)");
 				}
 			}
 			else

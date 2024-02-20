@@ -22,6 +22,7 @@ class Channel
 		std::set<int> _ops;
 		std::set<int> _members;
 		std::set<int> _inviteds;
+		std::map<char, bool> _mode;
 
 		bool	_passsetted;
 		
@@ -40,6 +41,7 @@ class Channel
 		std::vector<Client> &getClist();
 		bool isMember(int searchNumber)const;
 		bool isOps(int searchNumber)const;
+		bool isInvited(int searchNumber)const;
 
 		void deleteMem(int fd);
 		void deleteOp(int fd);
@@ -49,6 +51,8 @@ class Channel
 		std::set<int> getOps(){return _ops;}
 		std::set<int> getMem(){return _members;}
 		std::set<int> getInv(){return _inviteds;}
+
+		bool getMode(char m){return _mode[m];}
 
 		void setOps(int fd);
 		void setMem(int fd);
