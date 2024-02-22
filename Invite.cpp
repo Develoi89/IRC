@@ -40,6 +40,7 @@ int Server::cmdInvite(Client *aux, std::vector<std::string> tokens) //Invite a c
 
     cl->newMessage(":" + aux->getNick() + " INVITE " + cl->getNick() + " " + tokens[2]);
     aux->newMessage(std::string("341 ") + aux->getNick() + " " + cl->getNick() + " " + tokens[2]);
+    ch->setInv(cl->getFd());
     return 0;
 }
 

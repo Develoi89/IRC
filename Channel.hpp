@@ -43,6 +43,8 @@ class Channel
 		bool isOps(int searchNumber)const;
 		bool isInvited(int searchNumber)const;
 
+		void exMode(char s, char c);
+
 		void deleteMem(int fd);
 		void deleteOp(int fd);
 		void deleteInv(int fd);

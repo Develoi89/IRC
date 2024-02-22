@@ -1,5 +1,19 @@
 #include "server.hpp"
 
+std::string mStr(Channel *c)
+{
+    std::string str = "+";
+    if(c->getMode('i'))
+        str += "i";
+    if(c->getMode('t'))
+        str += "t";
+    if(c->getMode('k'))
+        str += "k";
+    if(c->getMode('l'))
+        str += "l";
+    return str;
+}
+
 int Server::cmdMode(Client *aux, std::vector<std::string> tokens) //Change the channel’s mode:
 {
     if(tokens.size() < 2)
@@ -12,29 +26,57 @@ int Server::cmdMode(Client *aux, std::vector<std::string> tokens) //Change the c
 		aux->newMessage(std::string("403 ") +  aux->getNick() + " " + tokens[1] + " :No such channel");
         return 0;
 	}
-    else if (tokens[2].size() == 2 && tokens.size() > 2)
+    else if (tokens.size() == 2)
     {
-        switch (tokens[2][1])
-        {
-        case 'i':
-            /* Set/remove Invite-only channel */
-            break;
-        case 't':
-            /* Set/remove the restrictions of the TOPIC command to channel operators */
-            break;
-        case 'k':
-            /* Set/remove the channel key (password) */
-            break;
-        case 'o':
-            /* Give/take channel operator privilege */
-            break;
-        case 'l':
-            /* Set/remove the user limit to channel */
-            break;
-        default:
-            /* code */
-            break;
-        }
+        std::string modeString = mStr(&_channels[tokens[1]]);
+        aux->newMessage(std::string("324 ") +  aux->getNick() + " " + tokens[1] + " " + modeString);
     }
-
+    else if (tokens.size() > 2)
+    {
+        if(tokens[2].size() == 1)
+        {
+            std::string m = "itkol";
+            if(m.find(tokens[2][0]) != std::string::npos)
+            {
+                std::cout << "a" << std::endl;
+                if(_channels[tokens[1]].getMode(tokens[2][0]))
+                    aux->newMessage(tokens[1] + " mode + " + tokens[2]);
+                else
+                    aux->newMessage(tokens[1] + " mode - " + tokens[2]);
+            }
+        }
+        if(tokens[2][0] != '+' && tokens[2][0] != '-' && tokens[2].size() > 1 )
+            return(0);
+        if(tokens[2].size() == 2)
+        {
+            switch (tokens[2][1])
+            {
+            case 'i':
+                _channels[tokens[1]].exMode(tokens[2][0], tokens[2][1]);
+                break;
+            case 't':
+                _channels[tokens[1]].exMode(tokens[2][0], tokens[2][1]);
+                /* Set/remove the restrictions of the TOPIC command to channel operators */
+                break;
+            case 'k':
+                /* Set/remove the channel key (password) */
+                _channels[tokens[1]].exMode(tokens[2][0], tokens[2][1]);
+                break;
+            case 'o':
+                /* Give/take channel operator privilege */
+                _channels[tokens[1]].exMode(tokens[2][0], tokens[2][1]);
+                break;
+            case 'l':
+                /* Set/remove the user limit to channel */
+                _channels[tokens[1]].exMode(tokens[2][0], tokens[2][1]);
+                break;
+            default:
+                /* code */
+                break;
+            }
+            return (0);
+        }
+        return (0);
+    }
+    return (0);
 }

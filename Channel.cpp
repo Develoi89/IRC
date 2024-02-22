@@ -92,3 +92,10 @@ bool Channel::isInvited(int searchNumber)const
     return it != _inviteds.end();
 }
 
+void Channel::exMode(char s, char c)
+{
+    if (s == '+')
+        _mode[c] = true;
+    else if (s == '-')
+        _mode[c] = false;
+}
