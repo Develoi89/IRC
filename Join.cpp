@@ -6,7 +6,7 @@ void Server::respIrssi(Client *aux, Channel *ch)
 	if(ch->getTopic() != ""){
 		aux->newMessage(std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic());
 		// std::cout << std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic() << std::endl;
-		aux->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime());
+		aux->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic() + " " + _currentTime());
 		// std::cout << std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime() << std::endl;
 	}else{
 		aux->newMessage(std::string("331 ") + aux->getNick() + " " + ch->getName() + " :No topic is set");
@@ -82,20 +82,27 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
         if (iter != _channels.end())
 		{
 			if (i >= ps.size() && iter->second.passSetted())
-				aux->newMessage("475 " + aux->getNick() + key + " :Cannot join channel (+k)");
+				aux->newMessage("475 " + aux->getNick() + " " + key + " :Cannot join channel (+k)");
 			else if(i >= ps.size() && !iter->second.passSetted()){
 				if(key[0] != 35 && key[0] != 38)
 					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
 				else
 				{
-					if((iter->second.getMode('i') && iter->second.isInvited(aux->getFd())) || (!iter->second.getMode('i')))
+					if((iter->second.getMode('i') && !iter->second.isInvited(aux->getFd())))
+					{
+						aux->newMessage("473 " + aux->getNick() + " " + key + " :Cannot join channel (+i)");
+					}
+					else if((iter->second.getMode('l')) && iter->second.getLimit() <= iter->second.getMem().size()){
+						aux->newMessage((std::string("471 ") + aux->getNick() + " " + key + " :Cannot join channel (+l)"));
+						return 0;
+					}
+					else
 					{
 						iter->second.getClist().push_back(*aux);
 						iter->second.setMem(aux->getFd());
 						respIrssi(aux, &iter->second);
 					}
-					else
-						aux->newMessage("473 " + aux->getNick() + key + " :Cannot join channel (+i)");
+						
 				}
 			}
 			else if (i <= ps.size() && ps[i] == iter->second.getPass() && iter->second.passSetted()){
@@ -103,6 +110,8 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
 				else
 				{
+					//std::cout << "HOLA2" << std::endl;
+
 					if((iter->second.getMode('i') && iter->second.isInvited(aux->getFd())) || (!iter->second.getMode('i')))
 					{
 						iter->second.getClist().push_back(*aux);
@@ -110,7 +119,7 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 						respIrssi(aux, &iter->second);
 					}
 					else
-						aux->newMessage("473 " + aux->getNick() + key + " :Cannot join channel (+i)");
+						aux->newMessage("473 " + aux->getNick() + " " + key + " :Cannot join channel (+i)");
 				}
 			}
 			else if (i <= ps.size() && !iter->second.passSetted()){
@@ -118,6 +127,8 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
 				else
 				{
+					//std::cout << "HOLA3" << std::endl;
+
 					if((iter->second.getMode('i') && iter->second.isInvited(aux->getFd())) || (!iter->second.getMode('i')))
 					{
 						iter->second.getClist().push_back(*aux);
@@ -125,17 +136,17 @@ int Server::cmdJoin(Client *aux, std::vector<std::string> tokens) //Change the c
 						respIrssi(aux, &iter->second);
 					}
 					else
-						aux->newMessage("473 " + aux->getNick() + key + " :Cannot join channel (+i)");
+						aux->newMessage("473 " + aux->getNick() + " " + key + " :Cannot join channel (+i)");
 				}
 			}
 			else
-				aux->newMessage("475 " + aux->getNick() + key + " :Cannot join channel (+k)");
+				aux->newMessage("475 " + aux->getNick()+ " " + key + " :Cannot join channel (+k)");
 		}
         else
         {
             Channel first(key, *aux);
 			if(key[0] != 35 && key[0] != 38)
-					aux->newMessage(std::string("476 ") + key + " :Bad Channel Mask");
+					aux->newMessage(std::string("476 ") + " " + key + " :Bad Channel Mask");
 			else
 			{
 			if (i < ps.size())

@@ -40,8 +40,14 @@ Channel::Channel(std::string name, Client op)
 
 void Channel::setPass(std::string pass)
 {
+    if(pass == ""){
+         _passsetted = false;
+        _pass = pass;
+
+    }else{
     _pass = pass;
     _passsetted = true;
+    }
 }
 
 void Channel::setMsgs(std::string msg)
@@ -62,6 +68,10 @@ std::vector<Client> &Channel::getClist()
 void Channel::setOps(int fd)
 {
     _ops.insert(fd);
+}
+
+void Channel::remOps(int fd){
+    _ops.erase(fd);
 }
 
 void Channel::setMem(int fd)

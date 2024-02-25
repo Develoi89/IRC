@@ -49,6 +49,11 @@ int Server::cmdMode(Client *aux, std::vector<std::string> tokens) //Change the c
             return(0);
         if(tokens[2].size() == 2)
         {
+            if (!_channels[tokens[1]]. isOps(aux->getFd()))
+            {
+            	aux->newMessage(std::string("482 ") + aux->getNick() + " " + tokens[1] + " :You're not channel operator");
+                return 0;
+            }
             switch (tokens[2][1])
             {
             case 'i':
@@ -60,14 +65,50 @@ int Server::cmdMode(Client *aux, std::vector<std::string> tokens) //Change the c
                 break;
             case 'k':
                 /* Set/remove the channel key (password) */
+                if(tokens.size() < 4 && tokens[2][0] == '+'){
+                    aux->newMessage("461 " + aux->getNick() + " MODE :Not enought arguments.");
+                    return 0;
+                }
+                if(tokens.size() == 4){
+                    _channels[tokens[1]].setPass(tokens[3]);
+                }
+                if(tokens.size() == 3){
+                    _channels[tokens[1]].setPass("");
+                }
                 _channels[tokens[1]].exMode(tokens[2][0], tokens[2][1]);
                 break;
             case 'o':
                 /* Give/take channel operator privilege */
+                if(tokens.size() < 4 && tokens[2][0] == '+'){
+                    aux->newMessage("461 " + aux->getNick() + " MODE :Not enought arguments.");
+                    return 0;
+                }
+                if(tokens.size() == 4){
+                    int target = searchByFd(tokens[3]);
+                    if(target != -1 && _channels[tokens[1]].isMember(target) && !_channels[tokens[1]].isOps(target) && tokens[2][0] == '+'){
+                        _channels[tokens[1]].setOps(target);
+                    }
+                    else if(target != -1 && _channels[tokens[1]].isMember(target) && _channels[tokens[1]].isOps(target) && tokens[2][0] == '-'){
+                        _channels[tokens[1]].remOps(target);
+                    }
+                    else if (!_channels[tokens[1]].isMember(target))
+                    {
+                       aux->newMessage("441 " + aux->getNick() + " " + tokens[3] + " " + tokens[1] + " :They aren't on that channel");
+                       return 0;
+                    }
+
+                }
                 _channels[tokens[1]].exMode(tokens[2][0], tokens[2][1]);
                 break;
             case 'l':
                 /* Set/remove the user limit to channel */
+                if(tokens.size() < 4 && tokens[2][0] == '+'){
+                    aux->newMessage("461 " + aux->getNick() + " MODE :Not enought arguments.");
+                    return 0;
+                }
+                if(tokens.size() == 4){
+                    _channels[tokens[1]].setLimit(std::atoi(tokens[3].c_str()));
+                }
                 _channels[tokens[1]].exMode(tokens[2][0], tokens[2][1]);
                 break;
             default:

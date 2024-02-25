@@ -21,7 +21,7 @@ int Server::cmdTopic(Client *aux, std::vector<std::string> tokens) //Change or v
         aux->newMessage(std::string("442 ") +  aux->getNick() + " " + tokens[1] + " :You're not on that channel");
         return 0;
     }
-    if (tokens.size() > 2 && !ch->isOps(aux->getFd()))
+    if (tokens.size() > 2 && ch->getMode('t') && !ch->isOps(aux->getFd()))
 	{
 		aux->newMessage(std::string("482 ") + aux->getNick() + " " + tokens[1] + " :You're not channel operator");
         return 0;
@@ -46,13 +46,13 @@ int Server::cmdTopic(Client *aux, std::vector<std::string> tokens) //Change or v
         const std::set<int>& _members = ch->getMem();  
         for (std::set<int>::const_iterator it = _members.begin(); it != _members.end(); ++it) {
             map_clients[*it]->newMessage(std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic());
-            map_clients[*it]->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime());
+            map_clients[*it]->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic() + " " + _currentTime());
         }
         return 0;
 	}else{
         if(ch->getTopic() != ""){
             aux->newMessage(std::string("332 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic());
-            aux->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + aux->getNick() + " " + _currentTime());
+            aux->newMessage(std::string("333 ") + aux->getNick() + " " + ch->getName() + " " + ch->getTopic() + " " + _currentTime());
         }else{
             aux->newMessage(std::string("331 ") + aux->getNick() + " " + ch->getName() + " :No topic is set");
         }

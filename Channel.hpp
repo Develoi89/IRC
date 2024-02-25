@@ -23,7 +23,7 @@ class Channel
 		std::set<int> _members;
 		std::set<int> _inviteds;
 		std::map<char, bool> _mode;
-
+		int limit;
 		bool	_passsetted;
 		
 	public:
@@ -42,7 +42,8 @@ class Channel
 		bool isMember(int searchNumber)const;
 		bool isOps(int searchNumber)const;
 		bool isInvited(int searchNumber)const;
-
+		void setLimit(int lim){limit = lim;}
+		int getLimit(){return limit;}
 		void exMode(char s, char c);
 
 		void deleteMem(int fd);
@@ -57,6 +58,7 @@ class Channel
 		bool getMode(char m){return _mode[m];}
 
 		void setOps(int fd);
+		void remOps(int fd);
 		void setMem(int fd);
 		void setInv(int fd);
 
