@@ -120,11 +120,22 @@ void Server::_request(int i)
 //         h++;
 //     }
     std::string request(buffer, bytes);
-    std::vector<std::string> cm = tkparser(request, "\r\n");
-    memset(buffer, 0, sizeof(buffer));
-    if(cm.size() == 0)
-        return ;
-    runCmd(cm, i);
+    std::string tmp = this->map_clients[this->_pollsfd[i].fd]->getBuffer();
+    if(request.find("\r\n") != std::string::npos)
+    {
+        tmp.append(request);
+        this->map_clients[this->_pollsfd[i].fd]->setBuffer("");
+        std::vector<std::string> cm = tkparser(tmp, "\r\n");
+        memset(buffer, 0, sizeof(buffer));
+        if(cm.size() == 0)
+            return ;
+        runCmd(cm, i);
+    }
+    else
+    {
+        tmp.append(request);
+        this->map_clients[this->_pollsfd[i].fd]->setBuffer(tmp);
+    }
 }
 
 void Server::loop(){
@@ -133,14 +144,16 @@ void Server::loop(){
     std::signal(SIGINT, handler);
 
     while(!stop){
-        if(poll(this->_pollsfd.data(), this->cls , -1) == -1){
+        if(poll(this->_pollsfd.data(), this->cls , -1) == -1)
+        {
             std::cout << std::strerror(errno) << std::endl;
             close( this->serverfd_.fd);
             exit(1);
         }
         
             for(int i = 0; i < this->cls; i++){
-                if (this->_pollsfd[i].revents & POLLIN) {
+                if (this->_pollsfd[i].revents & POLLIN)
+                {
                     if (this->_pollsfd[i].fd == this->serverfd_.fd)
                     {
                         struct sockaddr_storage	remotaddr;
