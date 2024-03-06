@@ -1,4 +1,5 @@
 CLEAN_CAR	=	\033[2K\r
+MAKEFLAGS += --no-print-directory
 
 OBJ_DIR		=	obj/
 
@@ -34,16 +35,15 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98
 $(OBJ_DIR)%.o:	%.cpp %.tpp %.hpp Makefile
 		@$(MD) $(dir $@)
 		@echo "$(CLEAN_CAR)$(OK_COLOR)[IRC Compiling]$(BLUE_COLOR) : $(WARN_COLOR)$<$(NO_COLOR)"
-		@${CC} $(CFLAGS) -MMD -c $< -o $@
+		@$(CC) ${CFLAGS} -o $@ -c $<
 
-$(NAME)		:	$(OBJ)
+$(NAME)		:	$(OBJ) $(HDS)
 		@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 		@sleep 0.2
 		@echo "$(CLEAN_CAR)$(OK_COLOR)IRC Compiled!$(NO_COLOR)"
 		@echo "Use $(BLUE_COLOR)./ircserv$(NO_COLOR) to launch the program"
 					
-all			:		@$(MAKE) $(NAME) 
-
+all			:	$(NAME)
 
 clean		:
 		@rm -rf  $(OBJ)
@@ -54,8 +54,6 @@ fclean		:	clean
 		@echo "$(ERROR_COLOR)$(NAME) removed$(NO_COLOR)"
 
 re			:	fclean	all
-
-$(VERBOSE).SILENT:
 
 .PHONY		:	all clean fclean re
 
@@ -84,3 +82,5 @@ BLUE_COLOR		=	\x1b[34;01m
 OK_STRING		=	$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING	=	$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING		=	$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
+
+$(VERBOSE).SILENT:
