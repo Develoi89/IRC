@@ -38,7 +38,6 @@ int Server::cmdMode(Client *aux, std::vector<std::string> tokens) //Change the c
             std::string m = "itkol";
             if(m.find(tokens[2][0]) != std::string::npos)
             {
-                std::cout << "a" << std::endl;
                 if(_channels[tokens[1]].getMode(tokens[2][0]))
                     aux->newMessage(tokens[1] + " mode + " + tokens[2]);
                 else
