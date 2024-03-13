@@ -21,9 +21,5 @@ bool Server::checkCmd(Client *aux, std::vector<std::string> tokens)
     {
         (this->*(iter->second))(aux, tokens); 
     } 
-    else
-    {
-        std::cerr << "Función no encontrada" << std::endl;
-    }
     return true;
 }
