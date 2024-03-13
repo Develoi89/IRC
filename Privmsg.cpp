@@ -29,7 +29,7 @@ int Server::sendChannel(Client *aux, std::vector<std::string> tokens, std::strin
         aux->newMessage(std::string("412 ") + aux->getNick() + " :No text to send");
         return 0;
     }
-    Channel *ch = &_channels[tokens[1]];
+    Channel *ch = &_channels[target];
     if (!ch->isMember(aux->getFd())) {
         aux->newMessage(std::string("442 ") +  aux->getNick() + " " + tokens[2] + " :You're not on that channel");
         return 0;
@@ -42,9 +42,9 @@ int Server::sendChannel(Client *aux, std::vector<std::string> tokens, std::strin
 		msg.append(" " + tokens[i]);
     const std::set<int>& _members = ch->getMem();  
 	for (std::set<int>::const_iterator it = _members.begin(); it != _members.end(); ++it) {
-        if(map_clients[*it]->getName() != aux->getName()){
+        // if(map_clients[*it]->getName() != aux->getName()){
             map_clients[*it]->newMessage(msg);
-        }
+        // }
     }
     return 0;
 }

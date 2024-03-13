@@ -1,7 +1,5 @@
 CLEAN_CAR	=	\033[2K\r
 
-OBJ_DIR		=	obj/
-
 NAME		=	ircserv
 
 SRC			=	main.cpp\
@@ -31,9 +29,7 @@ OBJ			=	$(SRC:.cpp=.o)
 CC			=	c++
 CFLAGS		=	-Wall -Wextra -Werror -std=c++98
 
-$(OBJ_DIR)%.o:	%.cpp %.tpp %.hpp Makefile
-		@$(MD) $(dir $@)
-		@echo "$(CLEAN_CAR)$(OK_COLOR)[IRC Compiling]$(BLUE_COLOR) : $(WARN_COLOR)$<$(NO_COLOR)"
+%.o:	%.cpp %.tpp %.hpp Makefile
 		@$(CC) ${CFLAGS} -o $@ -c $<@
 
 $(NAME)		:	$(OBJ) $(HDS)
